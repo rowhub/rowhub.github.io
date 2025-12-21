@@ -256,6 +256,19 @@
   <main class="container">
     <div class="game-container">
       <div class="game-frame">
+        <!-- مربع الإعلان - سيظهر فقط عند التكبير -->
+        <div id="ad-banner" style="position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,.85);color:#fff;padding:8px 12px;font-size:13px;z-index:9998;display:none;box-sizing:border-box">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-direction:row-reverse">
+            <span>Ad</span>
+            <button onclick="document.getElementById('ad-banner').style.display='none'" style="background:#ff4444;color:#fff;border:none;padding:3px 7px;border-radius:3px;cursor:pointer;font-size:11px;line-height:1">✕</button>
+          </div>
+          <div style="margin-top:6px;text-align:center">
+            <a href="https://tundrafile.com/1804505" target="_blank" rel="noopener noreferrer" style="display: block; text-align: center;">
+              <img src="https://tikmob.github.io/game/images/Gtaads.png" alt="Ad" style="width:100%;max-width:800px;height:auto;display:block;margin:0 auto">
+            </a>
+          </div>
+        </div>
+        
         <!-- شاشة التحميل -->
         <div class="loading" id="loading">
           <div class="loading-spinner"></div>
@@ -264,6 +277,7 @@
 
         <!-- اللعبة -->
         <iframe id="game-iframe" src="" allow="autoplay;fullscreen" scrolling="no" title="Fortzone Battle Royale - Free HTML5 Game on FreePlayHub"></iframe>
+        <!-- زر التكبير فقط (لا يوجد زر تصغير) -->
         <button id="zoom-btn" class="zoom-btn" aria-label="Toggle fullscreen">⤢</button>
       </div>
 
@@ -332,9 +346,10 @@
           iframe.src = "https://storage.y8.com/y8-studio/unity_webgl/MirraGames/fortzone_battle_royale/?key=y8&value=default";
       }, 500);
       
-      // === 2. زر التكبير ===
+      // === 2. زر التكبير (بدون زر تصغير) ===
       const zoomBtn = document.getElementById('zoom-btn');
       const gameFrame = document.querySelector('.game-frame');
+      const adBanner = document.getElementById('ad-banner');
       let isExpanded = false;
       let usingBrowserFS = false;
 
@@ -343,19 +358,23 @@
           document.documentElement.style.overflow = 'hidden';
           document.body.style.overflow = 'hidden';
           isExpanded = true;
-          zoomBtn.classList.add('exit');
-          zoomBtn.textContent = '✕';
+          // أظهر الإعلان عند التكبير فقط
+          adBanner.style.display = 'block';
+          // إخفاء زر التكبير تماماً عند الدخول في وضع ملء الشاشة
+          zoomBtn.style.display = 'none';
       }
-      
+
       function exitCssFullscreen() {
           gameFrame.classList.remove('fullscreen-css');
           document.documentElement.style.overflow = '';
           document.body.style.overflow = '';
           isExpanded = false;
-          zoomBtn.classList.remove('exit');
-          zoomBtn.textContent = '⤢';
+          // إخفاء الإعلان عند الخروج من وضع ملء الشاشة
+          adBanner.style.display = 'none';
+          // إعادة عرض زر التكبير
+          zoomBtn.style.display = 'flex';
       }
-
+    
       async function enterBrowserFullscreen() {
           const el = gameFrame;
           if (!el) return false;
@@ -365,8 +384,10 @@
               await req.call(el);
               usingBrowserFS = true;
               isExpanded = true;
-              zoomBtn.classList.add('exit');
-              zoomBtn.textContent = '✕';
+              // أظهر الإعلان عند التكبير فقط
+              adBanner.style.display = 'block';
+              // إخفاء زر التكبير تماماً عند الدخول في وضع ملء الشاشة
+              zoomBtn.style.display = 'none';
               return true;
           } catch {
               return false;
@@ -380,8 +401,10 @@
               await exit.call(document);
               usingBrowserFS = false;
               isExpanded = false;
-              zoomBtn.classList.remove('exit');
-              zoomBtn.textContent = '⤢';
+              // إخفاء الإعلان عند الخروج من وضع ملء الشاشة
+              adBanner.style.display = 'none';
+              // إعادة عرض زر التكبير
+              zoomBtn.style.display = 'flex';
               return true;
           } catch {
               return false;
@@ -408,14 +431,18 @@
               usingBrowserFS = false;
               if (!gameFrame.classList.contains('fullscreen-css')) {
                   isExpanded = false;
-                  zoomBtn.classList.remove('exit');
-                  zoomBtn.textContent = '⤢';
+                  // إخفاء الإعلان عند الخروج من وضع ملء الشاشة
+                  adBanner.style.display = 'none';
+                  // إعادة عرض زر التكبير
+                  zoomBtn.style.display = 'flex';
               }
           } else {
               usingBrowserFS = true;
               isExpanded = true;
-              zoomBtn.classList.add('exit');
-              zoomBtn.textContent = '✕';
+              // أظهر الإعلان عند التكبير فقط
+              adBanner.style.display = 'block';
+              // إخفاء زر التكبير تماماً عند الدخول في وضع ملء الشاشة
+              zoomBtn.style.display = 'none';
           }
       }
 
