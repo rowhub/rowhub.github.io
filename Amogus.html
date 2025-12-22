@@ -385,7 +385,7 @@
           <div id="ad-above-iframe"></div>
           
           <div class="game-frame">
-            <!-- مكان للإعلان عند التكبير -->
+            <!-- مكان للإعلان عند التكبير - إعلان fullscreen موجود -->
             <div id="fullscreen-ad"></div>
             
             <!-- شاشة التحميل -->
@@ -525,7 +525,7 @@
               }
           }
           
-          // Fullscreen Ad
+          // Fullscreen Ad - الإعلان الذي يظهر عند تكبير الـ iframe
           if (adsConfig.fullscreenAd && adsConfig.fullscreenAd.enabled) {
               const container = document.getElementById('fullscreen-ad');
               if (container) {
@@ -574,12 +574,15 @@
                   }
               }
               
-              // إغلاق الإعلان العلوي
+              // إغلاق الإعلان العلوي (fullscreen ad)
               if (e.target.closest('#fullscreen-ad button')) {
                   const ad = document.getElementById('fullscreen-ad');
                   if (ad) {
-                      ad.style.display = 'none';
-                      localStorage.setItem('adClosed_fullscreen', 'true');
+                      const adElement = ad.querySelector('div[id="ad-banner"]');
+                      if (adElement) {
+                          adElement.style.display = 'none';
+                          localStorage.setItem('adClosed_fullscreen', 'true');
+                      }
                   }
               }
           });
@@ -592,6 +595,17 @@
                       ad.style.display = 'none';
                   }
               });
+              
+              // التحقق من إعلان التكبير المغلق
+              if (localStorage.getItem('adClosed_fullscreen') === 'true') {
+                  const fullscreenAd = document.getElementById('fullscreen-ad');
+                  if (fullscreenAd) {
+                      const adElement = fullscreenAd.querySelector('div[id="ad-banner"]');
+                      if (adElement) {
+                          adElement.style.display = 'none';
+                      }
+                  }
+              }
           }, 100);
       }
       
@@ -608,7 +622,7 @@
           iframe.src = "https://amogus.io/";
       }, 500);
       
-      // === 4. زر التكبير ===
+      // === 4. زر التكبير مع إظهار الإعلان ===
       const zoomBtn = document.getElementById('zoom-btn');
       const gameFrame = document.querySelector('.game-frame');
       let isExpanded = false;
@@ -620,6 +634,15 @@
           document.body.style.overflow = 'hidden';
           isExpanded = true;
           zoomBtn.style.display = 'none';
+          
+          // إظهار إعلان التكبير عند الدخول في وضع ملء الشاشة
+          const fullscreenAd = document.getElementById('fullscreen-ad');
+          if (fullscreenAd && localStorage.getItem('adClosed_fullscreen') !== 'true') {
+              const adElement = fullscreenAd.querySelector('div[id="ad-banner"]');
+              if (adElement) {
+                  adElement.style.display = 'block';
+              }
+          }
       }
 
       function exitCssFullscreen() {
@@ -628,6 +651,15 @@
           document.body.style.overflow = '';
           isExpanded = false;
           zoomBtn.style.display = 'flex';
+          
+          // إخفاء إعلان التكبير عند الخروج من وضع ملء الشاشة
+          const fullscreenAd = document.getElementById('fullscreen-ad');
+          if (fullscreenAd) {
+              const adElement = fullscreenAd.querySelector('div[id="ad-banner"]');
+              if (adElement) {
+                  adElement.style.display = 'none';
+              }
+          }
       }
     
       async function enterBrowserFullscreen() {
@@ -640,6 +672,15 @@
               usingBrowserFS = true;
               isExpanded = true;
               zoomBtn.style.display = 'none';
+              
+              // إظهار إعلان التكبير عند الدخول في وضع ملء الشاشة
+              const fullscreenAd = document.getElementById('fullscreen-ad');
+              if (fullscreenAd && localStorage.getItem('adClosed_fullscreen') !== 'true') {
+                  const adElement = fullscreenAd.querySelector('div[id="ad-banner"]');
+                  if (adElement) {
+                      adElement.style.display = 'block';
+                  }
+              }
               return true;
           } catch {
               return false;
@@ -654,6 +695,15 @@
               usingBrowserFS = false;
               isExpanded = false;
               zoomBtn.style.display = 'flex';
+              
+              // إخفاء إعلان التكبير عند الخروج من وضع ملء الشاشة
+              const fullscreenAd = document.getElementById('fullscreen-ad');
+              if (fullscreenAd) {
+                  const adElement = fullscreenAd.querySelector('div[id="ad-banner"]');
+                  if (adElement) {
+                      adElement.style.display = 'none';
+                  }
+              }
               return true;
           } catch {
               return false;
@@ -681,11 +731,29 @@
               if (!gameFrame.classList.contains('fullscreen-css')) {
                   isExpanded = false;
                   zoomBtn.style.display = 'flex';
+                  
+                  // إخفاء إعلان التكبير عند الخروج من وضع ملء الشاشة
+                  const fullscreenAd = document.getElementById('fullscreen-ad');
+                  if (fullscreenAd) {
+                      const adElement = fullscreenAd.querySelector('div[id="ad-banner"]');
+                      if (adElement) {
+                          adElement.style.display = 'none';
+                      }
+                  }
               }
           } else {
               usingBrowserFS = true;
               isExpanded = true;
               zoomBtn.style.display = 'none';
+              
+              // إظهار إعلان التكبير عند الدخول في وضع ملء الشاشة
+              const fullscreenAd = document.getElementById('fullscreen-ad');
+              if (fullscreenAd && localStorage.getItem('adClosed_fullscreen') !== 'true') {
+                  const adElement = fullscreenAd.querySelector('div[id="ad-banner"]');
+                  if (adElement) {
+                      adElement.style.display = 'block';
+                  }
+              }
           }
       }
 
