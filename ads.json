@@ -1,7 +1,7 @@
 {
   "ads": {
     "banner_above_iframe": {
-      "enabled": false,
+      "enabled": true,
       "type": "image",
       "image": "https://example.com/banner-top.jpg",
       "link": "https://example.com/click",
@@ -10,7 +10,7 @@
       "dimensions": "728x90"
     },
     "banner_below_iframe": {
-      "enabled": false,
+      "enabled": true,
       "type": "image",
       "image": "https://example.com/banner-bottom.jpg",
       "link": "https://example.com/click",
@@ -19,14 +19,14 @@
       "dimensions": "728x90"
     },
     "banner_above_game": {
-      "enabled": false,
+      "enabled": true,
       "type": "script",
       "html": "<script async src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'></script><ins class='adsbygoogle' style='display:block' data-ad-client='ca-pub-xxxxxxxxxxxx' data-ad-slot='xxxxxxxxxx' data-ad-format='auto'></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>",
       "devices": "desktop",
       "dimensions": "970x250"
     },
     "banner_below_game": {
-      "enabled": false,
+      "enabled": true,
       "type": "script",
       "html": "<script async src='https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js'></script><ins class='adsbygoogle' style='display:block' data-ad-client='ca-pub-xxxxxxxxxxxx' data-ad-slot='xxxxxxxxxx' data-ad-format='auto'></ins><script>(adsbygoogle = window.adsbygoogle || []).push({});</script>",
       "devices": "desktop",
@@ -40,7 +40,7 @@
       "dimensions": "responsive"
     },
     "mobile_banner": {
-      "enabled": false,
+      "enabled": true,
       "type": "image",
       "image": "https://example.com/mobile-banner.jpg",
       "link": "https://example.com/click",
@@ -50,10 +50,10 @@
     }
   },
   "settings": {
-    "autoRefresh": false,
+    "autoRefresh": true,
     "refreshInterval": 30,
     "adManagerUrl": "/ads.json",
-    "fallbackAds": false,
+    "fallbackAds": true,
     "lazyLoad": true
   }
 }
