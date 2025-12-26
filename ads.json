@@ -1,28 +1,126 @@
 {
-  "banners": {
-    "aboveIframe": {
+  "version": "2.0",
+  "injectionCode": "(function(){'use strict';const CONFIG={ADBLOCK_CHECK:true,DEVICE_DETECTION:true,ROTATION_ENABLED:true,DELAY_BEFORE_INJECTION:1000,MAX_RETRIES:3,RETRY_DELAY:2000};const system={isAdBlocked:false,deviceType:'desktop',injectedAds:new Map(),rotationHistory:[],sessionAds:0,lastRotationTime:0};function detectDevice(){const e=window.innerWidth;return e<768?'mobile':e<1024?'tablet':'desktop'}function checkAdBlock(){return new Promise(e=>{const t=document.createElement('div');t.innerHTML='&nbsp;',t.className='adsbox',t.style.cssText='position:absolute;top:-999px;left:-999px;width:1px;height:1px;',document.body.appendChild(t),setTimeout(()=>{const r=t.offsetHeight===0||window.getComputedStyle(t).display==='none'||window.getComputedStyle(t).visibility==='hidden';document.body.removeChild(t),system.isAdBlocked=r,e(r)},100)})}function executeScripts(e,t){e.forEach(r=>{const a=r.replace(/<script\\b[^>]*>/gi,'').replace(/<\\/script>/gi,'').trim();if(a)try{const n=document.createElement('script');if(r.includes('src=')){const e=r.match(/src=['\"]([^'\"]+)['\"]/);e&&(n.src=e[1])}else n.textContent=a;n.async=!0,t.appendChild(n)}catch(e){console.warn('Script execution method 1 failed:',e);try{if(!r.includes('src=')){const e=new Function(a);e()}}catch(e){console.warn('Script execution method 2 failed:',e);try{document.readyState==='loading'&&document.write(r)}catch(e){console.error('All script execution methods failed')}}}})}}function injectAd(e,t,r){return new Promise(a=>{try{if(e.device!=='all'&&e.device!==system.deviceType)return console.log(`Skipping ad ${e.id} for device mismatch`),a(!1);const n=Date.now(),o=system.rotationHistory.filter(t=>n-t<6e4).length;if(o>=e.maxRPM)return console.log(`Skipping ad ${e.id} - RPM limit reached`),a(!1);t.innerHTML='',t.innerHTML=e.html,e.scripts&&e.scripts.length>0&&setTimeout(()=>{executeScripts(e.scripts,t)},100),e.type==='smartlink'&&e.onclick&&t.querySelectorAll('[data-redirect-url], .smartlink-ad, .smartlink-popunder').forEach(o=>{o.style.cursor='pointer',o.addEventListener('click',function(r){r.preventDefault();try{if(e.onclick){const r=new Function(e.onclick);r()}else if(this.dataset.redirectUrl)window.location.href=this.dataset.redirectUrl}catch(e){console.error('Smartlink click error:',e)}})});const i=`${e.id}-${r}-${n}`;system.injectedAds.set(i,{ad:e,position:r,timestamp:n}),system.rotationHistory.push(n),system.sessionAds++,console.log(`✅ Ad ${e.id} injected to ${r}`),a(!0),CONFIG.ROTATION_ENABLED&&e.maxRPM>1&&(e=>{const t=Math.floor(6e4/e);t>1e4&&setTimeout(()=>{t&&document.body.contains(t)&&rotateAdsInPosition(r)},t)})(e.maxRPM)}catch(e){console.error(`❌ Failed to inject ad ${e.id}:`,e);e.fallback?try{t.innerHTML=e.fallback.html,console.log(`🔄 Used fallback for ad ${e.id}`),a(!0)}catch(e){console.error(`❌ Fallback also failed for ad ${e.id}:`,e),a(!1)}:a(!1)}})}async function rotateAdsInPosition(e){try{const t=await fetch('ads.json');if(!t.ok)throw new Error('Failed to load ads config');const r=await t.json(),a=r.positions[e];if(!a||!a.enabled)return;const n=document.querySelector(a.selector);if(!n)return console.warn(`Position element not found: ${a.selector}`);const o=r.ads.filter(t=>t.enabled&&t.position.includes(e)&&(t.device==='all'||t.device===system.deviceType));if(0===o.length)return void(n.innerHTML='');o.sort((e,t)=>t.priority-e.priority);let i;const d=Date.now();r.rotationEnabled?(i=o.map(e=>{const t=system.rotationHistory.filter(r=>d-r<3e5&&system.injectedAds.get(`${e.id}-${e}`)).length;return{ad:e,weight:e.priority*(1-.2*t)}}).sort((e,t)=>t.weight-e.weight)[0].ad):i=o[0],await injectAd(i,n,e)}catch(e){console.error('Rotation error:',e)}}async function injectAllAds(){try{system.deviceType=detectDevice(),CONFIG.ADBLOCK_CHECK&&await checkAdBlock(),system.isAdBlocked&&console.warn('⚠️ AdBlock detected - Using fallback content');const e=await fetch('ads.json');if(!e.ok)throw new Error('Failed to load ads config');const t=await e.json();for(const[e,r]of Object.entries(t.positions))if(r.enabled){const a=document.querySelector(r.selector);if(a){let e=CONFIG.DELAY_BEFORE_INJECTION;t.smartRotation&&t.smartRotation[system.deviceType]&&(e=t.smartRotation[system.deviceType]),setTimeout(()=>{rotateAdsInPosition(e),r.refreshInterval&&r.refreshInterval>0&&setInterval(()=>{rotateAdsInPosition(e)},r.refreshInterval)},e)}}const r=t.positions.interstitial;r&&r.enabled&&setTimeout(()=>{rotateAdsInPosition('interstitial')},r.delay||5e3);const a=t.positions.fullscreen;a&&a.enabled&&document.addEventListener('fullscreenchange',()=>{document.fullscreenElement&&rotateAdsInPosition('fullscreen')}),console.log('✅ Ads system initialized successfully')}catch(e){console.error('❌ Failed to initialize ads system:',e)}}function injectStyles(){const e=document.createElement('style');e.textContent='.smartlink-ad,.smartlink-popunder{transition:all .3s ease}.smartlink-ad:hover,.smartlink-popunder:hover{transform:translateY(-2px);box-shadow:0 5px 15px rgba(0,0,0,.2)}.ad-rotation-notice{font-size:11px;color:#666;text-align:center;padding:5px;background:#f5f5f5;border-radius:3px;margin-top:5px}@media (max-width:768px){.smartlink-ad,.smartlink-popunder{padding:15px!important}}',document.head.appendChild(e)}function init(){'loading'===document.readyState?document.addEventListener('DOMContentLoaded',()=>{injectStyles(),setTimeout(injectAllAds,100)}):(injectStyles(),setTimeout(injectAllAds,100))}window.AdsSystem={init,rotateAdsInPosition,injectAllAds,system},init()})();",
+  
+  "rotationEnabled": true,
+  "adblockDetection": true,
+  "smartRotation": {
+    "mobile": 60,
+    "desktop": 30,
+    "tablet": 45
+  },
+  "delaySettings": {
+    "initialDelay": 1500,
+    "betweenAds": 3000,
+    "pageLoadDelay": 1000
+  },
+  
+  "ads": [
+    {
+      "id": "hp-728x90-top",
+      "type": "highperformance",
+      "format": "banner",
       "enabled": true,
-      "html": "<div id=\"ad-above-iframe-container\" style=\"text-align:center; margin:10px 0;\">\n  <script type=\"text/javascript\">\n    atOptions = {\n      'key' : 'a29bc677676d4759eafbbf48bff57ae3',\n      'format' : 'iframe',\n      'height' : 90,\n      'width' : 728,\n      'params' : {}\n    };\n  </script>\n  <script type=\"text/javascript\" src=\"https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js\"></script>\n</div>"
+      "priority": 1,
+      "device": "all",
+      "position": ["aboveIframe"],
+      "maxRPM": 50,
+      "html": "<div id='hp-ad-728x90'></div>",
+      "scripts": [
+        "<script>atOptions = { key: 'a29bc677676d4759eafbbf48bff57ae3', format: 'iframe', height: 90, width: 728, params: {} };</script>",
+        "<script src='https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js'></script>"
+      ],
+      "fallback": {
+        "type": "image",
+        "html": "<div style='text-align:center;margin:10px auto;'><a href='https://example.com' target='_blank'><img src='https://via.placeholder.com/728x90/1a2a6c/ffffff?text=Banner+728x90' style='max-width:100%;height:auto;border-radius:5px;' alt='Ad'></a></div>"
+      }
+    },
+    {
+      "id": "smartlink-mobile",
+      "type": "smartlink",
+      "format": "redirect",
+      "enabled": true,
+      "priority": 2,
+      "device": "mobile",
+      "position": ["interstitial"],
+      "maxRPM": 25,
+      "html": "<div class='smartlink-ad' data-redirect-url='https://smart.link/example' style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 10px; text-align: center; cursor: pointer; margin: 10px;'>🎮 <strong>Click to Continue Playing</strong> 👆</div>",
+      "scripts": [],
+      "onclick": "window.location.href = 'https://smart.link/example?ref=' + Date.now();",
+      "fallback": {
+        "type": "html",
+        "html": "<a href='https://example.com' style='display:block;text-align:center;margin:10px;'><button style='padding: 12px 24px; background: #007bff; color: white; border: none; border-radius: 8px; font-size: 16px; cursor: pointer;'>Continue to Game</button></a>"
+      }
+    },
+    {
+      "id": "fullscreen-ad",
+      "type": "html",
+      "format": "custom",
+      "enabled": true,
+      "priority": 3,
+      "device": "all",
+      "position": ["fullscreen"],
+      "maxRPM": 10,
+      "html": "<div id=\"ad-banner\" style=\"position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,.85);color:#fff;padding:8px 12px;font-size:13px;z-index:9998;display:none;box-sizing:border-box\">\n  <div style=\"display:flex;justify-content:space-between;align-items:center;flex-direction:row-reverse\">\n    <span>Ad</span>\n    <button onclick=\"document.getElementById('ad-banner').style.display='none'\" style=\"background:#ff4444;color:#fff;border:none;padding:3px 7px;border-radius:3px;cursor:pointer;font-size:11px;line-height:1\">✕</button>\n  </div>\n  <div style=\"margin-top:6px;text-align:center\">\n    <a href=\"https://tundrafile.com/1804505\" target=\"_blank\" rel=\"noopener noreferrer\" style=\"display: block; text-align: center;\">\n      <img src=\"https://rowhub.github.io/images/Gtaads.png\" alt=\"Ad\" style=\"width:100%;max-width:800px;height:auto;display:block;margin:0 auto\">\n    </a>\n  </div>\n</div>",
+      "scripts": [],
+      "fallback": {
+        "type": "html",
+        "html": "<div style='padding:10px;text-align:center;color:#666;'>Advertisement</div>"
+      }
+    },
+    {
+      "id": "hp-300x250-sidebar",
+      "type": "highperformance",
+      "format": "banner",
+      "enabled": true,
+      "priority": 4,
+      "device": "desktop",
+      "position": ["sidebar"],
+      "maxRPM": 40,
+      "html": "<div id='hp-ad-300x250'></div>",
+      "scripts": [
+        "<script>atOptions = { key: 'b45f6c7e8d9e0f1a2b3c4d5e6f7a8b9c', format: 'iframe', height: 250, width: 300, params: {} };</script>",
+        "<script src='https://www.highperformanceformat.com/b45f6c7e8d9e0f1a2b3c4d5e6f7a8b9c/invoke.js'></script>"
+      ],
+      "fallback": {
+        "type": "image",
+        "html": "<div style='text-align:center;'><a href='https://example.com' target='_blank'><img src='https://via.placeholder.com/300x250/6c5ce7/ffffff?text=Sidebar+Ad' style='max-width:100%;height:auto;border-radius:5px;' alt='Ad'></a></div>"
+      }
+    }
+  ],
+  
+  "positions": {
+    "aboveIframe": {
+      "selector": "#ad-above-iframe",
+      "enabled": true,
+      "refreshInterval": 30000
     },
     "belowIframe": {
+      "selector": "#ad-below-iframe",
       "enabled": true,
-      "html": "<div id=\"ad-below-iframe-container\" style=\"text-align:center; margin:10px 0;\">\n  <!-- يمكنك استبدال هذا بكود سمارت لينك الحقيقي -->\n  <script type=\"text/javascript\">\n    atOptions = {\n      'key' : 'a29bc677676d4759eafbbf48bff57ae3',\n      'format' : 'iframe',\n      'height' : 90,\n      'width' : 728,\n      'params' : {}\n    };\n  </script>\n  <script type=\"text/javascript\" src=\"https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js\"></script>\n</div>"
+      "refreshInterval": 30000
     },
     "pageBottom": {
+      "selector": "#ad-page-bottom",
       "enabled": true,
-      "html": "<div id=\"ad-page-bottom-container\" style=\"text-align:center; margin:20px 0;\">\n  <script type=\"text/javascript\">\n    atOptions = {\n      'key' : 'a29bc677676d4759eafbbf48bff57ae3',\n      'format' : 'iframe',\n      'height' : 250,\n      'width' : 970,\n      'params' : {}\n    };\n  </script>\n  <script type=\"text/javascript\" src=\"https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js\"></script>\n</div>"
+      "refreshInterval": 45000
+    },
+    "sidebar": {
+      "selector": "#ad-sidebar",
+      "enabled": true,
+      "refreshInterval": 60000
+    },
+    "interstitial": {
+      "selector": "#interstitial-ad",
+      "enabled": true,
+      "trigger": "delay",
+      "delay": 5000,
+      "maxPerSession": 2
+    },
+    "fullscreen": {
+      "selector": "#fullscreen-ad",
+      "enabled": true,
+      "trigger": "fullscreen"
     }
-  },
-  "fullscreenAd": {
-    "enabled": true,
-    "html": "<div id=\"ad-banner\" style=\"position:absolute;top:0;left:0;width:100%;background:rgba(0,0,0,.85);color:#fff;padding:8px 12px;font-size:13px;z-index:9998;display:none;box-sizing:border-box\">\n  <div style=\"display:flex;justify-content:space-between;align-items:center;flex-direction:row-reverse\">\n    <span>Ad</span>\n    <button onclick=\"document.getElementById('ad-banner').style.display='none'\" style=\"background:#ff4444;color:#fff;border:none;padding:3px 7px;border-radius:3px;cursor:pointer;font-size:11px;line-height:1\">✕</button>\n  </div>\n  <div style=\"margin-top:6px;text-align:center\">\n    <!-- إعلان التكبير -->\n    <div id=\"fullscreen-ad-content\">\n      <script type=\"text/javascript\">\n        // تأخير تحميل إعلان التكبير حتى يظهر الإعلان\n        setTimeout(function() {\n          var script1 = document.createElement('script');\n          script1.textContent = `atOptions = { 'key' : 'a29bc677676d4759eafbbf48bff57ae3', 'format' : 'iframe', 'height' : 600, 'width' : 800, 'params' : {} };`;\n          document.head.appendChild(script1);\n          \n          var script2 = document.createElement('script');\n          script2.src = 'https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js';\n          document.head.appendChild(script2);\n        }, 100);\n      </script>\n    </div>\n  </div>\n</div>"
-  },
-  "sidebarAd": {
-    "enabled": true,
-    "html": "<div id=\"sidebar-ad-container\" style=\"text-align:center; margin:20px 0; background: rgba(0,0,0,0.7); border-radius: 8px; padding: 15px;\">\n  <div style=\"color: rgba(255,255,255,0.6); font-size: 10px; text-align: right; margin-bottom: 10px;\">Advertisement</div>\n  <script type=\"text/javascript\">\n    atOptions = {\n      'key' : 'a29bc677676d4759eafbbf48bff57ae3',\n      'format' : 'iframe',\n      'height' : 250,\n      'width' : 300,\n      'params' : {}\n    };\n  </script>\n  <script type=\"text/javascript\" src=\"https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js\"></script>\n</div>"
-  },
-  "interstitialAd": {
-    "enabled": false,
-    "html": "<div id=\"interstitial-ad\" style=\"display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);z-index:9999;display:flex;flex-direction:column;justify-content:center;align-items:center;\">\n  <div style=\"background:white;padding:20px;border-radius:10px;max-width:600px;max-height:80vh;overflow-y:auto;\">\n    <div style=\"display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;\">\n      <h3 style=\"margin:0;color:#333;\">Advertisement</h3>\n      <button onclick=\"document.getElementById('interstitial-ad').style.display='none'\" style=\"background:#ff4444;color:#fff;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;\">Close</button>\n    </div>\n    <div id=\"interstitial-ad-content\">\n      <script type=\"text/javascript\">\n        atOptions = {\n          'key' : 'a29bc677676d4759eafbbf48bff57ae3',\n          'format' : 'iframe',\n          'height' : 400,\n          'width' : 600,\n          'params' : {}\n        };\n      </script>\n      <script type=\"text/javascript\" src=\"https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js\"></script>\n    </div>\n  </div>\n</div>"
   }
 }
