@@ -58,7 +58,7 @@
       "priceCurrency": "USD"
     },
     "image": "https://rowhub.github.io/game/images/111.png",
-    "datePublished": "2025-12-26"
+    "datePublished": "2025-12-27"
   }
   </script>
 
@@ -90,242 +90,6 @@
   }
   </script>
   
-  <!-- Ad Manager Styles -->
-  <style>
-    /* أنماط الإعلانات الديناميكية */
-    .ad-banner {
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 8px;
-      padding: 15px;
-      margin: 15px 0;
-      position: relative;
-      backdrop-filter: blur(5px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      min-height: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-    }
-    
-    .ad-banner iframe {
-      border: none !important;
-      display: block !important;
-      margin: 0 auto !important;
-    }
-    
-    .ad-label {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.6);
-      font-size: 10px;
-      padding: 2px 6px;
-      border-radius: 3px;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      z-index: 10;
-    }
-    
-    .ad-close-btn {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      background: rgba(255, 68, 68, 0.7);
-      color: white;
-      border: none;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      cursor: pointer;
-      font-size: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.3s ease;
-      z-index: 10;
-    }
-    
-    .ad-close-btn:hover {
-      background: rgba(255, 68, 68, 1);
-    }
-    
-    .ad-728x90 {
-      width: 100%;
-      max-width: 728px;
-      height: 90px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .ad-468x60 {
-      width: 100%;
-      max-width: 468px;
-      height: 60px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .ad-300x250 {
-      width: 100%;
-      max-width: 300px;
-      height: 250px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .ad-160x600 {
-      width: 100%;
-      max-width: 160px;
-      height: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .ad-320x50 {
-      width: 100%;
-      max-width: 320px;
-      height: 50px;
-      margin-left: auto;
-      margin-right: auto;
-    }
-    
-    .ad-smartlink {
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f);
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
-    
-    .ad-smartlink .smartlink-content {
-      padding: 20px;
-      border-radius: 8px;
-      background: rgba(255, 255, 255, 0.1);
-    }
-    
-    .ad-smartlink button {
-      background: #ffd700;
-      color: #000;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: bold;
-      margin-top: 10px;
-    }
-    
-    #fullscreen-ad-banner {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 9998;
-      background: rgba(0, 0, 0, 0.9);
-      padding: 10px;
-      display: none;
-      box-sizing: border-box;
-    }
-    
-    #interstitial-ad {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.95);
-      z-index: 999999;
-      justify-content: center;
-      align-items: center;
-    }
-    
-    .anti-adblock-message {
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f);
-      padding: 20px;
-      border-radius: 8px;
-      text-align: center;
-      color: #fff;
-      margin: 15px 0;
-    }
-    
-    /* تحسينات استجابة الإعلانات */
-    @media (max-width: 768px) {
-      .ad-728x90 {
-        max-width: 100%;
-        height: auto;
-        min-height: 90px;
-      }
-      
-      .ad-468x60 {
-        max-width: 100%;
-        height: auto;
-        min-height: 60px;
-      }
-      
-      .ad-300x250 {
-        max-width: 100%;
-        height: auto;
-        min-height: 250px;
-      }
-      
-      .ad-160x600 {
-        max-width: 100%;
-        height: auto;
-        min-height: 200px;
-      }
-    }
-    
-    @media (max-width: 480px) {
-      .ad-banner {
-        padding: 10px;
-      }
-      
-      .ad-728x90,
-      .ad-468x60 {
-        height: 50px;
-        min-height: 50px;
-      }
-      
-      .ad-300x250 {
-        height: 200px;
-        min-height: 200px;
-      }
-    }
-    
-    /* الرسوم المتحركة للإعلانات */
-    @keyframes adFadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    
-    .ad-fade-in {
-      animation: adFadeIn 0.5s ease;
-    }
-    
-    .ad-rotating {
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .ad-rotating::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: -100%;
-      width: 100%;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, #ffd700, transparent);
-      animation: shine 3s infinite;
-    }
-    
-    @keyframes shine {
-      0% { left: -100%; }
-      100% { left: 100%; }
-    }
-  </style>
-  
-  <!-- الأنماط الأصلية -->
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d);color:#fff;min-height:100vh;line-height:1.6}
@@ -471,32 +235,152 @@
       margin: 20px 0;
       color: #ff6b6b;
     }
-    
-    /* مواقع الإعلانات */
-    .ad-above-iframe {
-      margin-bottom: 20px;
+
+    /* أنماط الإعلانات - ستُحقن ديناميكياً */
+    .ad-container {
+      position: relative;
+      margin: 15px 0;
+      min-height: 50px;
     }
     
-    .ad-below-iframe {
-      margin-top: 20px;
-      margin-bottom: 30px;
+    .ad-banner {
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 8px;
+      padding: 15px;
+      position: relative;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(108, 92, 231, 0.3);
+      transition: transform 0.3s ease;
+      text-align: center;
     }
     
-    .ad-page-bottom {
-      margin-top: 40px;
-      margin-bottom: 20px;
+    .ad-banner:hover {
+      transform: translateY(-2px);
+      border-color: rgba(108, 92, 231, 0.6);
     }
     
-    .ad-sidebar {
-      position: sticky;
-      top: 100px;
+    .ad-label {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(108, 92, 231, 0.2);
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 10px;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
     }
     
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+    .ad-close-btn {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: rgba(255, 68, 68, 0.8);
+      color: white;
+      border: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.3s ease;
     }
     
+    .ad-close-btn:hover {
+      background: rgba(255, 68, 68, 1);
+    }
+    
+    .ad-smartlink {
+      background: linear-gradient(135deg, rgba(26, 42, 108, 0.9), rgba(178, 31, 31, 0.9));
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .ad-native {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 4px solid #6c5ce7;
+      text-align: left;
+    }
+    
+    .native-ad-label {
+      color: #a29bfe;
+      font-size: 11px;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    
+    .native-content h4 {
+      color: #fff;
+      margin-bottom: 5px;
+      font-size: 16px;
+    }
+    
+    .native-content p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+    
+    .native-link {
+      color: #3CF7DC;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    /* إعلانات بأحجام مختلفة */
+    .ad-468x60 { min-height: 60px; }
+    .ad-300x250 { min-height: 250px; }
+    .ad-160x300 { min-height: 300px; }
+    .ad-160x600 { min-height: 600px; }
+    .ad-320x50 { min-height: 50px; }
+    .ad-728x90 { min-height: 90px; }
+    
+    /* إعلانات متجاوبة */
+    @media (max-width: 768px) {
+      .ad-728x90, .ad-468x60 {
+        min-height: auto;
+        height: auto;
+      }
+      .ad-banner {
+        padding: 10px;
+      }
+    }
+    
+    /* Anti-Adblock Message */
+    .anti-adblock-message {
+      background: rgba(0,0,0,0.9);
+      color: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      text-align: center;
+      margin: 20px 0;
+      border: 2px solid #6c5ce7;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { border-color: #6c5ce7; }
+      50% { border-color: #a29bfe; }
+      100% { border-color: #6c5ce7; }
+    }
+    
+    /* حاويات إعلانات إضافية */
+    .ad-smartlink-extra {
+      margin: 20px 0;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
     /* تصميم جديد للجوانب */
     .page-layout {
       display: flex;
@@ -538,16 +422,17 @@
       .game-title{font-size:1.5rem}
       .seo-content h1{font-size:1.5rem}
       .games-grid{grid-template-columns:1fr}
+      .ad-banner img {
+        max-width: 100% !important;
+        height: auto !important;
+      }
     }
     @media (orientation:landscape){.game-frame.fullscreen-css .zoom-btn.exit{top:8px;right:8px}}
   </style>
 </head>
 
 <body>
-  <!-- عنصر Anti-Adblock -->
-  <div id="anti-adblock-message" style="display:none;"></div>
-  
-  <!-- Interstitial Ad -->
+  <!-- عناصر فارغة للإعلانات - ستُملأ ديناميكياً -->
   <div id="interstitial-ad"></div>
   
   <header class="game-header">
@@ -565,16 +450,11 @@
       <main class="main-content">
         <div class="game-container">
           <!-- مكان للإعلان فوق الـ iframe -->
-          <div id="ad-above-iframe" class="ad-banner ad-above-iframe">
-            <div class="loading-state">
-              <div class="loading-spinner"></div>
-              <p>Loading advertisement...</p>
-            </div>
-          </div>
+          <div id="ad-above-iframe" class="ad-container"></div>
           
           <div class="game-frame">
-            <!-- Fullscreen Ad Banner -->
-            <div id="fullscreen-ad-banner"></div>
+            <!-- مكان للإعلان عند التكبير - إعلان fullscreen موجود -->
+            <div id="fullscreen-ad"></div>
             
             <!-- شاشة التحميل -->
             <div class="loading" id="loading">
@@ -584,17 +464,12 @@
 
             <!-- اللعبة -->
             <iframe id="game-iframe" src="" allow="autoplay;fullscreen" scrolling="no" title="Cricket Superstar League - Free HTML5 Game on FreePlayHub"></iframe>
-            <!-- زر التكبير -->
+            <!-- زر التكبير فقط (لا يوجد زر تصغير) -->
             <button id="zoom-btn" class="zoom-btn" aria-label="Toggle fullscreen">⤢</button>
           </div>
 
           <!-- مكان للإعلان تحت الـ iframe -->
-          <div id="ad-below-iframe" class="ad-banner ad-below-iframe">
-            <div class="loading-state">
-              <div class="loading-spinner"></div>
-              <p>Loading advertisement...</p>
-            </div>
-          </div>
+          <div id="ad-below-iframe" class="ad-container"></div>
           
           <div class="game-info">
             <h1 class="game-title">Cricket Superstar League</h1>
@@ -606,6 +481,9 @@
               <div class="feature-item"><h3>🌟 Premium Quality</h3><p>Experience the best HTML5 games with smooth performance and great graphics.</p></div>
             </div>
           </div>
+
+          <!-- مكان إضافي لـ Smartlink -->
+          <div id="ad-smartlink-extra" class="ad-container ad-smartlink-extra"></div>
 
           <!-- قسم الألعاب المقترحة -->
           <section class="suggested-games">
@@ -645,24 +523,14 @@
           </div>
           
           <!-- مكان للإعلان أسفل الصفحة -->
-          <div id="ad-page-bottom" class="ad-banner ad-page-bottom">
-            <div class="loading-state">
-              <div class="loading-spinner"></div>
-              <p>Loading advertisement...</p>
-            </div>
-          </div>
+          <div id="ad-page-bottom" class="ad-container"></div>
         </div>
       </main>
       
       <!-- الجانب الأيمن - Sidebar -->
       <aside class="sidebar">
         <!-- مكان للإعلان الجانبي -->
-        <div id="ad-sidebar" class="ad-banner ad-sidebar">
-          <div class="loading-state">
-            <div class="loading-spinner"></div>
-            <p>Loading sidebar advertisement...</p>
-          </div>
-        </div>
+        <div id="ad-sidebar" class="ad-container"></div>
         
         <!-- محتوى إضافي للـ SEO -->
         <div style="background:rgba(255,255,255,0.1);padding:20px;border-radius:8px;margin-top:20px;backdrop-filter:blur(10px)">
@@ -677,27 +545,420 @@
         </div>
         
         <!-- مكان لإعلان إضافي في الـ Sidebar -->
-        <div id="ad-sidebar-vertical" style="margin-top:20px;"></div>
+        <div id="ad-sidebar-vertical" class="ad-container" style="margin-top:20px;"></div>
       </aside>
     </div>
   </div>
 
-  <!-- Ad Manager Script -->
-  <script src="js/ad-manager.js"></script>
-  
+  <!-- حاوية إضافية لـ Popunder -->
+  <div id="popunder-container" style="display:none;"></div>
+
   <script>
   document.addEventListener("DOMContentLoaded", function () {
-      // === 1. تهيئة مدير الإعلانات ===
-      const adManager = new AdManager();
-      
-      // البدء في تحميل الإعلانات
-      adManager.init().then(success => {
-          if (success) {
-              console.log('✅ Ad system initialized successfully');
+      // === 1. تحميل الإعلانات من ملف ads.json ===
+      async function loadAds() {
+          try {
+              const response = await fetch('ads.json');
+              
+              if (!response.ok) {
+                  throw new Error('Failed to load ads configuration');
+              }
+              
+              const adsConfig = await response.json();
+              
+              // 🔍 كشف AdBlock
+              if (adsConfig.antiAdblock && adsConfig.antiAdblock.enabled) {
+                  checkAdBlock(adsConfig);
+              }
+              
+              // 📱 تحديد نوع الجهاز
+              const deviceType = detectDevice(adsConfig.deviceDetection);
+              console.log(`📱 Device detected: ${deviceType}`);
+              
+              // 🔄 تدوير الإعلانات الرئيسية
+              const rotationInterval = adsConfig.rotationSettings?.interval || 30000;
+              
+              // حقن الإعلانات
+              injectAds(adsConfig, deviceType);
+              
+              // 🔄 تدوير الإعلانات
+              if (adsConfig.adSettings?.rotationEnabled) {
+                  setInterval(() => {
+                      injectAds(adsConfig, deviceType);
+                  }, rotationInterval);
+              }
+              
+              // ⏱ تأخير ذكي للإعلانات
+              if (adsConfig.adSettings?.smartDelayEnabled) {
+                  setTimeout(() => {
+                      injectDelayedAds(adsConfig, deviceType);
+                  }, (adsConfig.adSettings?.defaultRPM || 3) * 1000);
+              }
+              
+              // 🚀 إعلان Popunder
+              if (adsConfig.popunderSettings?.enabled) {
+                  setTimeout(() => {
+                      showPopunder(adsConfig);
+                  }, adsConfig.popunderSettings.delay || 5000);
+              }
+              
+              // 🧠 Smartlink ذكي حسب الجهاز
+              if (adsConfig.adSettings?.smartlinkEnabled) {
+                  injectSmartlink(adsConfig, deviceType);
+              }
+              
+              // 🚫 Anti-Adblock إضافي
+              if (adsConfig.antiAdblock?.enabled) {
+                  setInterval(() => {
+                      checkAdBlock(adsConfig);
+                  }, (adsConfig.antiAdblock.checkInterval || 30) * 1000);
+              }
+              
+          } catch (error) {
+              console.error('Error loading ads:', error);
+              // إعلانات احتياطية
+              showFallbackAds();
           }
-      });
+      }
       
-      // === 2. تحميل اللعبة ===
+      // دالة حقن الإعلانات
+      function injectAds(adsConfig, deviceType) {
+          if (!adsConfig || !adsConfig.adPositions) return;
+          
+          // حقن إعلان الـ interstitial
+          if (adsConfig.adPositions.interstitial?.enabled) {
+              showInterstitialAd(adsConfig);
+          }
+          
+          // حقن إعلانات المواقع
+          Object.keys(adsConfig.adPositions).forEach(position => {
+              const positionConfig = adsConfig.adPositions[position];
+              
+              if (positionConfig.enabled && position !== 'interstitial') {
+                  const container = document.getElementById(`ad-${position.replace(/([A-Z])/g, '-$1').toLowerCase()}`);
+                  
+                  if (container) {
+                      injectAdToPosition(container, positionConfig, adsConfig, deviceType, position);
+                  }
+              }
+          });
+      }
+      
+      // دالة حقن إعلان لموضع معين
+      function injectAdToPosition(container, positionConfig, adsConfig, deviceType, positionName) {
+          let availableAdUnits = [];
+          
+          // تحديد الإعلانات حسب الجهاز
+          if (positionConfig.deviceSpecific?.[deviceType]) {
+              availableAdUnits = positionConfig.deviceSpecific[deviceType];
+          } else if (positionConfig.adUnits) {
+              availableAdUnits = positionConfig.adUnits;
+          }
+          
+          // تصفية الإعلانات المفعلة فقط
+          availableAdUnits = availableAdUnits.filter(adUnitId => {
+              const adUnit = adsConfig.adUnits?.[adUnitId];
+              return adUnit && adUnit.enabled;
+          });
+          
+          if (availableAdUnits.length === 0) return;
+          
+          // 🔄 اختيار إعلان عشوائي
+          let selectedAdUnitId;
+          if (positionConfig.rotation && availableAdUnits.length > 1) {
+              const randomIndex = Math.floor(Math.random() * availableAdUnits.length);
+              selectedAdUnitId = availableAdUnits[randomIndex];
+          } else {
+              selectedAdUnitId = availableAdUnits[0];
+          }
+          
+          const selectedAdUnit = adsConfig.adUnits[selectedAdUnitId];
+          if (!selectedAdUnit) return;
+          
+          // ⏱ تأخير الإعلان إذا محدد
+          const loadAd = () => {
+              container.innerHTML = selectedAdUnit.html;
+              executeAdScripts(container);
+              
+              // تتبع الأداء
+              trackAdPerformance(positionName, selectedAdUnitId);
+          };
+          
+          if (positionConfig.delay) {
+              setTimeout(loadAd, positionConfig.delay);
+          } else {
+              loadAd();
+          }
+      }
+      
+      // دالة إعلانات مؤجلة
+      function injectDelayedAds(adsConfig, deviceType) {
+          const delayedPositions = ['pageBottom', 'sidebar'];
+          
+          delayedPositions.forEach(position => {
+              const container = document.getElementById(`ad-${position.replace(/([A-Z])/g, '-$1').toLowerCase()}`);
+              const positionConfig = adsConfig.adPositions?.[position];
+              
+              if (container && positionConfig?.enabled) {
+                  injectAdToPosition(container, positionConfig, adsConfig, deviceType, position);
+              }
+          });
+      }
+      
+      // دالة Smartlink الذكي
+      function injectSmartlink(adsConfig, deviceType) {
+          const smartlinkConfig = adsConfig.smartlinkSettings;
+          if (!smartlinkConfig?.enabled) return;
+          
+          const preferredAd = smartlinkConfig.devicePreferences?.[deviceType] || 'smartlink';
+          const smartlinkAd = adsConfig.adUnits?.[preferredAd];
+          
+          if (!smartlinkAd || !smartlinkAd.enabled) return;
+          
+          // حقن Smartlink في مواقع إضافية
+          const extraContainers = ['ad-smartlink-extra'];
+          extraContainers.forEach(containerId => {
+              const container = document.getElementById(containerId);
+              if (container) {
+                  container.innerHTML = smartlinkAd.html;
+                  executeAdScripts(container);
+              }
+          });
+      }
+      
+      // دالة إعلان Popunder
+      function showPopunder(adsConfig) {
+          const popunderConfig = adsConfig.popunderSettings;
+          const popunderAd = adsConfig.adUnits?.[popunderConfig?.adUnit];
+          
+          if (!popunderAd || !popunderAd.enabled) return;
+          
+          const popunderShown = sessionStorage.getItem('popunder_shown');
+          if (popunderShown) return;
+          
+          try {
+              const popup = window.open('about:blank', '_blank', 'width=1,height=1,left=0,top=0');
+              if (popup) {
+                  popup.document.write(popunderAd.html);
+                  popup.blur();
+                  window.focus();
+                  sessionStorage.setItem('popunder_shown', 'true');
+              }
+          } catch (e) {
+              console.log('Popunder blocked by browser');
+          }
+      }
+      
+      // دالة إعلان Interstitial
+      function showInterstitialAd(adsConfig) {
+          const interstitialConfig = adsConfig.adPositions?.interstitial;
+          if (!interstitialConfig?.enabled) return;
+          
+          const interstitialAd = adsConfig.adUnits?.[interstitialConfig.adUnit];
+          if (!interstitialAd || !interstitialAd.enabled) return;
+          
+          const interstitialShown = sessionStorage.getItem('interstitial_shown');
+          if (interstitialShown && parseInt(interstitialShown) >= (interstitialConfig.maxPerSession || 2)) {
+              return;
+          }
+          
+          const showAd = () => {
+              const container = document.getElementById('interstitial-ad');
+              if (container) {
+                  container.innerHTML = interstitialAd.html;
+                  container.style.display = 'flex';
+                  
+                  const count = parseInt(sessionStorage.getItem('interstitial_shown') || '0') + 1;
+                  sessionStorage.setItem('interstitial_shown', count.toString());
+                  
+                  // إغلاق تلقائي بعد 30 ثانية
+                  setTimeout(() => {
+                      closeInterstitial();
+                  }, 30000);
+              }
+          };
+          
+          if (interstitialConfig.showOnExit) {
+              window.addEventListener('beforeunload', showAd);
+          } else {
+              setTimeout(showAd, interstitialConfig.delaySeconds * 1000);
+          }
+      }
+      
+      // دالة كشف AdBlock
+      function checkAdBlock(adsConfig) {
+          const adblockCheck = document.createElement('div');
+          adblockCheck.className = 'ad-verification';
+          adblockCheck.style.cssText = 'width:1px;height:1px;position:absolute;left:-9999px;top:-9999px;';
+          document.body.appendChild(adblockCheck);
+          
+          setTimeout(() => {
+              const isAdBlocked = adblockCheck.offsetHeight === 0 || 
+                                 adblockCheck.style.display === 'none' ||
+                                 getComputedStyle(adblockCheck).display === 'none';
+              
+              if (isAdBlocked && adsConfig.antiAdblock.enabled) {
+                  showAntiAdblockMessage(adsConfig);
+              }
+              
+              document.body.removeChild(adblockCheck);
+          }, 100);
+      }
+      
+      // دالة عرض رسالة Anti-Adblock
+      function showAntiAdblockMessage(adsConfig) {
+          const noticeClosed = localStorage.getItem('adblock_notice_closed');
+          if (noticeClosed === 'true') return;
+          
+          const containers = ['ad-above-iframe', 'ad-below-iframe'];
+          containers.forEach(containerId => {
+              const container = document.getElementById(containerId);
+              if (container) {
+                  container.innerHTML = adsConfig.antiAdblock.html;
+              }
+          });
+      }
+      
+      // دالة الإعلانات الاحتياطية
+      function showFallbackAds() {
+          const fallbackAd = `
+              <div class="ad-banner">
+                  <div class="ad-label">Ad</div>
+                  <script type="text/javascript">
+                      atOptions = {
+                          'key': 'af340b221e82600db1aeec2c3bd2cd9c',
+                          'format': 'iframe',
+                          'height': 60,
+                          'width': 468,
+                          'params': {}
+                      };
+                      document.write('<scr' + 'ipt type="text/javascript" src="//www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js"></scr' + 'ipt>');
+                  </script>
+              </div>
+          `;
+          
+          document.querySelectorAll('.ad-container').forEach(container => {
+              container.innerHTML = fallbackAd;
+          });
+      }
+      
+      // دالة تنفيذ سكريبتات الإعلانات
+      function executeAdScripts(container) {
+          setTimeout(() => {
+              const scripts = container.querySelectorAll('script');
+              scripts.forEach(oldScript => {
+                  const newScript = document.createElement('script');
+                  
+                  if (oldScript.src) {
+                      newScript.src = oldScript.src;
+                      newScript.async = true;
+                  } else {
+                      newScript.textContent = oldScript.textContent;
+                  }
+                  
+                  newScript.type = 'text/javascript';
+                  document.body.appendChild(newScript);
+              });
+          }, 100);
+      }
+      
+      // دالة تحديد الجهاز
+      function detectDevice(deviceDetection) {
+          const width = window.innerWidth;
+          
+          if (!deviceDetection) return 'desktop';
+          
+          if (width <= deviceDetection.mobileMaxWidth) {
+              return 'mobile';
+          } else if (width <= deviceDetection.tabletMaxWidth) {
+              return 'tablet';
+          } else {
+              return 'desktop';
+          }
+      }
+      
+      // دالة تتبع أداء الإعلان
+      function trackAdPerformance(position, adUnit) {
+          // يمكنك إضافة تحليلات هنا
+          console.log(`📊 Ad displayed: ${adUnit} at ${position}`);
+      }
+      
+      // === 2. تهيئة أحداث الإعلانات ===
+      function initializeAdEvents() {
+          // إغلاق Interstitial
+          window.closeInterstitial = function() {
+              const interstitial = document.getElementById('interstitial-ad');
+              if (interstitial) {
+                  interstitial.style.display = 'none';
+              }
+          };
+          
+          // إغلاق Fullscreen Ad
+          window.closeFullscreenAd = function() {
+              const fsAd = document.getElementById('fullscreen-ad-banner');
+              if (fsAd) {
+                  fsAd.style.display = 'none';
+                  localStorage.setItem('adClosed_fullscreen', 'true');
+              }
+          };
+          
+          // تتبع النقرات
+          window.trackSmartlinkClick = function() {
+              console.log('Smartlink clicked');
+              // يمكنك إضافة Google Analytics هنا
+              if (typeof gtag !== 'undefined') {
+                  gtag('event', 'click', {
+                      'event_category': 'Ad',
+                      'event_label': 'Smartlink'
+                  });
+              }
+          };
+          
+          window.trackInterstitialClick = function() {
+              console.log('Interstitial clicked');
+              if (typeof gtag !== 'undefined') {
+                  gtag('event', 'click', {
+                      'event_category': 'Ad',
+                      'event_label': 'Interstitial'
+                  });
+              }
+          };
+          
+          window.trackFullscreenAdClick = function() {
+              console.log('Fullscreen ad clicked');
+              if (typeof gtag !== 'undefined') {
+                  gtag('event', 'click', {
+                      'event_category': 'Ad',
+                      'event_label': 'Fullscreen'
+                  });
+              }
+          };
+          
+          // إغلاق رسالة Anti-Adblock
+          document.addEventListener('click', function(e) {
+              if (e.target.matches('.anti-adblock-message button') || e.target.closest('.anti-adblock-message button')) {
+                  e.target.closest('.anti-adblock-message').style.display = 'none';
+                  localStorage.setItem('adblock_notice_closed', 'true');
+              }
+          });
+          
+          // أحداث زر التكبير مع إظهار الإعلان
+          const zoomBtn = document.getElementById('zoom-btn');
+          const gameFrame = document.querySelector('.game-frame');
+          
+          if (zoomBtn && gameFrame) {
+              zoomBtn.addEventListener('click', function() {
+                  setTimeout(() => {
+                      const fsAd = document.getElementById('fullscreen-ad-banner');
+                      if (fsAd && !localStorage.getItem('adClosed_fullscreen')) {
+                          fsAd.style.display = 'block';
+                      }
+                  }, 500);
+              });
+          }
+      }
+      
+      // === 3. تحميل اللعبة ===
       const iframe = document.getElementById('game-iframe');
       const loading = document.getElementById('loading');
       
@@ -710,7 +971,7 @@
           iframe.src = "https://www.gogy.com/games/cricket-superstar-league-iframe";
       }, 500);
       
-      // === 3. زر التكبير مع إظهار الإعلان ===
+      // === 4. زر التكبير مع إظهار الإعلان ===
       const zoomBtn = document.getElementById('zoom-btn');
       const gameFrame = document.querySelector('.game-frame');
       let isExpanded = false;
@@ -725,11 +986,8 @@
           
           // إظهار إعلان التكبير عند الدخول في وضع ملء الشاشة
           const fullscreenAd = document.getElementById('fullscreen-ad-banner');
-          if (fullscreenAd && localStorage.getItem('adClosed_fullscreen') !== 'true') {
+          if (fullscreenAd && !localStorage.getItem('adClosed_fullscreen')) {
               fullscreenAd.style.display = 'block';
-              setTimeout(() => {
-                  fullscreenAd.classList.add('ad-fade-in');
-              }, 10);
           }
       }
 
@@ -760,11 +1018,8 @@
               
               // إظهار إعلان التكبير عند الدخول في وضع ملء الشاشة
               const fullscreenAd = document.getElementById('fullscreen-ad-banner');
-              if (fullscreenAd && localStorage.getItem('adClosed_fullscreen') !== 'true') {
+              if (fullscreenAd && !localStorage.getItem('adClosed_fullscreen')) {
                   fullscreenAd.style.display = 'block';
-                  setTimeout(() => {
-                      fullscreenAd.classList.add('ad-fade-in');
-                  }, 10);
               }
               return true;
           } catch {
@@ -827,11 +1082,8 @@
               
               // إظهار إعلان التكبير عند الدخول في وضع ملء الشاشة
               const fullscreenAd = document.getElementById('fullscreen-ad-banner');
-              if (fullscreenAd && localStorage.getItem('adClosed_fullscreen') !== 'true') {
+              if (fullscreenAd && !localStorage.getItem('adClosed_fullscreen')) {
                   fullscreenAd.style.display = 'block';
-                  setTimeout(() => {
-                      fullscreenAd.classList.add('ad-fade-in');
-                  }, 10);
               }
           }
       }
@@ -847,7 +1099,7 @@
           }
       });
       
-      // === 4. تحميل الألعاب المقترحة من JSON ===
+      // === 5. تحميل الألعاب المقترحة من JSON ===
       async function loadSuggestedGames() {
           const gamesGrid = document.getElementById('suggested-games-grid');
           const currentGameId = "cricket-superstar-league";
@@ -879,7 +1131,7 @@
                               <img src="${game.thumbnail}" 
                                    alt="Play ${game.title} - ${game.genre}" 
                                    loading="lazy"
-                                   onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDI4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjNkM1Q0U3Ii8+Cjx0ZXh0IHg9IjE0MCIgeT0iOTAiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj9taWRkbGUiPvCfka88L3RleHQ+Cjwvc3ZnPgo=';">
+                                   onerror="this.onerror=null; this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDI4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjNkM1Q0U3Ii8+Cjx0ZXh0IHg9IjE0MCIgeT0iOTAiIGZpbGw9IndoaXRlIiBmb250LXNpemU9IjE4IiB0ZXh0LWFuY2hvcj0ibWlkZGxlIj7wn5GvPC90ZXh0Pgo8L3N2Zz4K';">
                           </div>
                           <div class="game-card-content">
                               <h3 class="game-card-title">${game.title}</h3>
@@ -912,31 +1164,10 @@
           }
       }
       
-      // === 5. بدء تحميل المحتويات الديناميكية ===
-      setTimeout(loadSuggestedGames, 1000);
-      
-      // === 6. تهيئة أحداث الإغلاق للإعلانات ===
-      document.addEventListener('click', function(e) {
-          // إغلاق الإعلانات
-          if (e.target.classList.contains('ad-close-btn')) {
-              const adBanner = e.target.closest('.ad-banner');
-              if (adBanner) {
-                  const adId = adBanner.id || 'unknown';
-                  adBanner.style.display = 'none';
-                  localStorage.setItem('adClosed_' + adId, 'true');
-                  console.log('Ad closed:', adId);
-              }
-          }
-          
-          // إغلاق إعلان التكبير
-          if (e.target.closest('#fullscreen-ad-banner button')) {
-              const fullscreenAd = document.getElementById('fullscreen-ad-banner');
-              if (fullscreenAd) {
-                  fullscreenAd.style.display = 'none';
-                  localStorage.setItem('adClosed_fullscreen', 'true');
-              }
-          }
-      });
+      // === 6. بدء تحميل المحتويات الديناميكية ===
+      initializeAdEvents(); // تهيئة الأحداث أولاً
+      loadAds(); // ثم تحميل الإعلانات
+      setTimeout(loadSuggestedGames, 1000); // ثم تحميل الألعاب المقترحة
   });
   </script>
 </body>
