@@ -21,20 +21,24 @@ class AdsManager {
       this.config = await response.json();
       console.log('✅ تم تحميل إعدادات الإعلانات');
       
-      // تأخير ذكي قبل بدء الإعلانات
-      if (this.config.config?.smartDelay?.enabled) {
-        await this.delay(this.config.config.smartDelay.delayBeforeFirstAd);
+      // بدء تحميل الإعلانات فوراً (بدون تأخير أو تأخير قصير جداً)
+      const initialDelay = this.config.config?.smartDelay?.delayBeforeFirstAd || 0;
+      
+      if (initialDelay > 0) {
+        await this.delay(initialDelay);
       }
       
-      // تشغيل جميع الإعلانات
-      this.detectAdBlock();
-      this.loadPopunder();
-      this.loadBanners();
-      this.loadNativeBanner();
-      this.loadSidebarAds();
-      this.loadSmartlink();
-      this.loadSocialBar();
-      this.loadInterstitial();
+      // تشغيل جميع الإعلانات بشكل متوازي (أسرع)
+      Promise.all([
+        this.detectAdBlock(),
+        this.loadPopunder(),
+        this.loadBanners(),
+        this.loadNativeBanner(),
+        this.loadSidebarAds(),
+        this.loadSmartlink(),
+        this.loadSocialBar(),
+        this.loadInterstitial()
+      ]);
       
       console.log('🎯 تم تفعيل جميع الإعلانات بنجاح');
       
@@ -85,6 +89,8 @@ class AdsManager {
       return;
     }
     
+    const delay = this.config.popunder.delay || 1000;
+    
     setTimeout(() => {
       this.config.popunder.scripts.forEach(scriptUrl => {
         const script = document.createElement('script');
@@ -96,7 +102,7 @@ class AdsManager {
       this.sessionData.popunderShown = true;
       this.saveSessionData();
       console.log('✅ Popunder loaded');
-    }, this.config.popunder.delay || 3000);
+    }, delay);
   }
 
   // === 4. تحميل البانرات مع التدوير ===
@@ -136,17 +142,15 @@ class AdsManager {
       container.innerHTML = '';
       container.appendChild(adContainer);
       
-      // تحميل سكريبت الإعلان
-      setTimeout(() => {
-        window.atOptions = ad.config;
-        const script = document.createElement('script');
-        script.src = ad.script;
-        script.async = true;
-        document.getElementById(`banner-${ad.id}`).appendChild(script);
-      }, 100);
+      // تحميل سكريبت الإعلان فوراً (بدون setTimeout)
+      window.atOptions = ad.config;
+      const script = document.createElement('script');
+      script.src = ad.script;
+      script.async = true;
+      document.getElementById(`banner-${ad.id}`).appendChild(script);
     };
     
-    // تحميل أول إعلان
+    // تحميل أول إعلان فوراً
     loadAd(currentIndex);
     
     // التدوير إذا كان مفعل
@@ -177,15 +181,13 @@ class AdsManager {
     
     sidebar.insertBefore(container, sidebar.firstChild);
     
-    // تحميل السكريبت
-    setTimeout(() => {
-      const script = document.createElement('script');
-      script.src = this.config.nativeBanner.script;
-      script.async = true;
-      script.setAttribute('data-cfasync', 'false');
-      container.appendChild(script);
-      console.log('✅ Native Banner loaded');
-    }, 500);
+    // تحميل السكريبت فوراً
+    const script = document.createElement('script');
+    script.src = this.config.nativeBanner.script;
+    script.async = true;
+    script.setAttribute('data-cfasync', 'false');
+    container.appendChild(script);
+    console.log('✅ Native Banner loaded');
   }
 
   // === 6. تحميل إعلانات Sidebar ===
@@ -211,13 +213,12 @@ class AdsManager {
       container.innerHTML = '';
       container.appendChild(adDiv);
       
-      setTimeout(() => {
-        window.atOptions = ad.config;
-        const script = document.createElement('script');
-        script.src = ad.script;
-        script.async = true;
-        document.getElementById(`sidebar-${ad.id}`).appendChild(script);
-      }, 100);
+      // تحميل فوراً
+      window.atOptions = ad.config;
+      const script = document.createElement('script');
+      script.src = ad.script;
+      script.async = true;
+      document.getElementById(`sidebar-${ad.id}`).appendChild(script);
     };
     
     loadAd(currentIndex);
