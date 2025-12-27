@@ -236,51 +236,78 @@
       color: #ff6b6b;
     }
 
-    /* أنماط الإعلانات */
-    .ad-container {
-      position: relative;
-      margin: 15px 0;
-      min-height: 50px;
-    }
-    
+    /* أنماط الإعلانات - ستُحقن ديناميكياً */
     .ad-banner {
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0,0,0,0.7);
       border-radius: 8px;
       padding: 15px;
+      margin: 20px 0;
       position: relative;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(108, 92, 231, 0.3);
-      text-align: center;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255,255,255,0.1);
     }
     
     .ad-label {
       position: absolute;
       top: 8px;
       right: 8px;
-      background: rgba(108, 92, 231, 0.2);
-      color: rgba(255, 255, 255, 0.7);
+      background: rgba(255,255,255,0.1);
+      color: rgba(255,255,255,0.6);
       font-size: 10px;
-      padding: 3px 8px;
-      border-radius: 12px;
+      padding: 2px 6px;
+      border-radius: 3px;
       font-weight: bold;
-      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     
     .ad-close-btn {
       position: absolute;
       top: 8px;
       left: 8px;
-      background: rgba(255, 68, 68, 0.8);
+      background: rgba(255,68,68,0.7);
       color: white;
       border: none;
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       cursor: pointer;
-      font-size: 11px;
+      font-size: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
+      transition: background 0.3s ease;
+    }
+    
+    .ad-close-btn:hover {
+      background: rgba(255,68,68,1);
+    }
+    
+    .ad-above-iframe {
+      margin-bottom: 20px;
+    }
+    
+    .ad-below-iframe {
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .ad-page-bottom {
+      margin-top: 40px;
+      margin-bottom: 20px;
+    }
+    
+    .ad-sidebar {
+      position: sticky;
+      top: 100px;
+    }
+    
+    #interstitial-ad {
+      animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
     
     /* تصميم جديد للجوانب */
@@ -313,6 +340,9 @@
       .ad-banner {
         padding: 10px;
       }
+      .ad-page-bottom img {
+        max-height: 150px !important;
+      }
       .ad-sidebar {
         position: static;
         margin: 20px 0;
@@ -325,15 +355,16 @@
       .seo-content h1{font-size:1.5rem}
       .games-grid{grid-template-columns:1fr}
       .ad-banner img {
-        max-width: 100%;
-        height: auto;
+        max-width: 100% !important;
+        height: auto !important;
       }
     }
+    @media (orientation:landscape){.game-frame.fullscreen-css .zoom-btn.exit{top:8px;right:8px}}
   </style>
 </head>
 
 <body>
-  <!-- عناصر فارغة للإعلانات -->
+  <!-- عناصر فارغة للإعلانات - ستُملأ ديناميكياً -->
   <div id="interstitial-ad"></div>
   
   <header class="game-header">
@@ -351,10 +382,10 @@
       <main class="main-content">
         <div class="game-container">
           <!-- مكان للإعلان فوق الـ iframe -->
-          <div id="ad-above-iframe" class="ad-container"></div>
+          <div id="ad-above-iframe"></div>
           
           <div class="game-frame">
-            <!-- مكان للإعلان عند التكبير -->
+            <!-- مكان للإعلان عند التكبير - إعلان fullscreen موجود -->
             <div id="fullscreen-ad"></div>
             
             <!-- شاشة التحميل -->
@@ -365,12 +396,12 @@
 
             <!-- اللعبة -->
             <iframe id="game-iframe" src="" allow="autoplay;fullscreen" scrolling="no" title="Cricket Superstar League - Free HTML5 Game on FreePlayHub"></iframe>
-            <!-- زر التكبير -->
+            <!-- زر التكبير فقط (لا يوجد زر تصغير) -->
             <button id="zoom-btn" class="zoom-btn" aria-label="Toggle fullscreen">⤢</button>
           </div>
 
           <!-- مكان للإعلان تحت الـ iframe -->
-          <div id="ad-below-iframe" class="ad-container"></div>
+          <div id="ad-below-iframe"></div>
           
           <div class="game-info">
             <h1 class="game-title">Cricket Superstar League</h1>
@@ -387,7 +418,7 @@
           <section class="suggested-games">
             <h2>🎮 Suggested Games You Might Like</h2>
             <div class="games-grid" id="suggested-games-grid">
-              <!-- سيتم ملؤه تلقائياً بالجافاسكريبت -->
+              <!-- سيتم ملؤه تلقائياً بالجافاسكريبت من games.json -->
               <div class="loading-state">
                 <div class="loading-spinner"></div>
                 <p>Loading suggested games...</p>
@@ -421,14 +452,14 @@
           </div>
           
           <!-- مكان للإعلان أسفل الصفحة -->
-          <div id="ad-page-bottom" class="ad-container"></div>
+          <div id="ad-page-bottom"></div>
         </div>
       </main>
       
       <!-- الجانب الأيمن - Sidebar -->
       <aside class="sidebar">
         <!-- مكان للإعلان الجانبي -->
-        <div id="ad-sidebar" class="ad-container"></div>
+        <div id="ad-sidebar"></div>
         
         <!-- محتوى إضافي للـ SEO -->
         <div style="background:rgba(255,255,255,0.1);padding:20px;border-radius:8px;margin-top:20px;backdrop-filter:blur(10px)">
@@ -441,98 +472,20 @@
             <span style="background:rgba(108,92,231,0.5);padding:5px 10px;border-radius:15px;font-size:0.8rem">Sports</span>
           </div>
         </div>
+        
+        <!-- مكان لإعلان إضافي في الـ Sidebar -->
+        <div id="ad-sidebar-vertical" style="margin-top:20px;"></div>
       </aside>
     </div>
   </div>
 
-  <script>
+<!-- تحميل نظام الإعلانات الذكي -->
+<script src="ads-manager.js" defer></script>
+
+<script>
   document.addEventListener("DOMContentLoaded", function () {
-      // === 1. تحميل الإعلانات من ملف ads.json ===
-      async function loadAds() {
-          try {
-              const response = await fetch('ads.json');
-              
-              if (!response.ok) {
-                  throw new Error('Failed to load ads configuration');
-              }
-              
-              const adsConfig = await response.json();
-              
-              // حقن الإعلانات
-              injectAds(adsConfig);
-              
-          } catch (error) {
-              console.error('Error loading ads:', error);
-          }
-      }
+      // === فقط كود تحميل اللعبة والألعاب المقترحة ===
       
-      function injectAds(adsConfig) {
-          // الإعلان فوق الـ iframe
-          if (adsConfig.banners && adsConfig.banners.aboveIframe && adsConfig.banners.aboveIframe.enabled) {
-              const container = document.getElementById('ad-above-iframe');
-              if (container) {
-                  container.innerHTML = adsConfig.banners.aboveIframe.html;
-              }
-          }
-          
-          // الإعلان تحت الـ iframe
-          if (adsConfig.banners && adsConfig.banners.belowIframe && adsConfig.banners.belowIframe.enabled) {
-              const container = document.getElementById('ad-below-iframe');
-              if (container) {
-                  container.innerHTML = adsConfig.banners.belowIframe.html;
-              }
-          }
-          
-          // الإعلان أسفل الصفحة
-          if (adsConfig.banners && adsConfig.banners.pageBottom && adsConfig.banners.pageBottom.enabled) {
-              const container = document.getElementById('ad-page-bottom');
-              if (container) {
-                  container.innerHTML = adsConfig.banners.pageBottom.html;
-              }
-          }
-          
-          // Fullscreen Ad
-          if (adsConfig.fullscreenAd && adsConfig.fullscreenAd.enabled) {
-              const container = document.getElementById('fullscreen-ad');
-              if (container) {
-                  container.innerHTML = adsConfig.fullscreenAd.html;
-              }
-          }
-          
-          // Sidebar Ad
-          if (adsConfig.sidebarAd && adsConfig.sidebarAd.enabled) {
-              const container = document.getElementById('ad-sidebar');
-              if (container) {
-                  container.innerHTML = adsConfig.sidebarAd.html;
-              }
-          }
-          
-          // Interstitial Ad
-          if (adsConfig.interstitialAd && adsConfig.interstitialAd.enabled) {
-              const container = document.getElementById('interstitial-ad');
-              if (container) {
-                  container.innerHTML = adsConfig.interstitialAd.html;
-              }
-          }
-          
-          // تهيئة أحداث الإعلانات
-          initializeAdEvents();
-      }
-      
-      // === 2. تهيئة أحداث الإعلانات ===
-      function initializeAdEvents() {
-          // أزرار إغلاق الإعلانات
-          document.addEventListener('click', function(e) {
-              if (e.target.classList.contains('ad-close-btn')) {
-                  const adBanner = e.target.closest('.ad-banner');
-                  if (adBanner) {
-                      adBanner.style.display = 'none';
-                  }
-              }
-          });
-      }
-      
-      // === 3. تحميل اللعبة ===
       const iframe = document.getElementById('game-iframe');
       const loading = document.getElementById('loading');
       
@@ -545,7 +498,7 @@
           iframe.src = "https://www.gogy.com/games/cricket-superstar-league-iframe";
       }, 500);
       
-      // === 4. زر التكبير ===
+      // === زر التكبير (نفس الكود) ===
       const zoomBtn = document.getElementById('zoom-btn');
       const gameFrame = document.querySelector('.game-frame');
       let isExpanded = false;
@@ -637,7 +590,7 @@
           }
       });
       
-      // === 5. تحميل الألعاب المقترحة ===
+      // === تحميل الألعاب المقترحة ===
       async function loadSuggestedGames() {
           const gamesGrid = document.getElementById('suggested-games-grid');
           const currentGameId = "cricket-superstar-league";
@@ -664,7 +617,7 @@
               
               selectedGames.forEach(game => {
                   gamesHTML += `
-                         <a href="${game.id}.html" class="game-card">
+                      <a href="${game.id}.html" class="game-card">
                           <div class="game-card-image">
                               <img src="${game.thumbnail}" 
                                    alt="Play ${game.title} - ${game.genre}" 
@@ -688,24 +641,15 @@
               gamesGrid.innerHTML = `
                   <div class="error-state" style="grid-column: 1 / -1;">
                       <p>Unable to load suggested games. Please try again later.</p>
-                      <button onclick="loadSuggestedGames()" style="
-                          background: #6c5ce7;
-                          color: white;
-                          border: none;
-                          padding: 10px 20px;
-                          border-radius: 5px;
-                          cursor: pointer;
-                          margin-top: 10px;
-                      ">Retry</button>
                   </div>
               `;
           }
       }
       
-      // === 6. بدء تحميل المحتويات الديناميكية ===
-      loadAds(); // تحميل الإعلانات أولاً
-      setTimeout(loadSuggestedGames, 1000); // ثم تحميل الألعاب المقترحة
+      // بدء تحميل الألعاب المقترحة
+      setTimeout(loadSuggestedGames, 1000);
   });
-  </script>
+</script>
+
 </body>
 </html>
