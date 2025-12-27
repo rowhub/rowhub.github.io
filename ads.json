@@ -20,7 +20,7 @@
   },
   
   "popunder": {
-    "enabled": true,
+    "enabled": false,
     "frequency": "once_per_session",
     "delay": 1000,
     "scripts": [
