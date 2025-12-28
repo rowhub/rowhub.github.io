@@ -11,7 +11,7 @@
       "delayBetweenAds": 2000,
       "comment": "تأخير محسّن: 1 ثانية قبل أول إعلان، 2 ثواني بين الإعلانات"
     },
-    {
+    
   "config": {
     "antiAdblock": {
       "enabled": true,
@@ -25,7 +25,7 @@
       "comment": "نظام Anti-Adblock صارم - يمنع التفاعل مع الصفحة تماماً"
     }
   }
-}
+
   },
   
   "popunder": {
