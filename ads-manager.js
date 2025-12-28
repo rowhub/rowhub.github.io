@@ -521,14 +521,20 @@ class AdsManager {
     }
   }
 
+  // === التصحيح الرئيسي: إصلاح دالة تحميل الإعلان ===
   loadSingleAd(container, ad, containerId) {
     if (!ad || !ad.script) return;
     
     console.log(`📢 تحميل إعلان: ${ad.id} في ${containerId}`);
     
-    // إنشاء معرف فريد للإعلان
     const uniqueId = `${ad.id}-${Date.now()}`;
-    const scriptKey = `${ad.config?.key}-${uniqueId}`;
+    
+    // ⚠️ التصحيح: استخدام atOptions ثابت بدلاً من أسماء متغيرة
+    window.atOptions = window.atOptions || {};
+    Object.assign(window.atOptions, {
+        ...ad.config,
+        params: ad.config?.params || {}
+    });
     
     const adDiv = document.createElement('div');
     adDiv.className = 'ad-banner';
@@ -542,32 +548,25 @@ class AdsManager {
     container.appendChild(adDiv);
     
     setTimeout(() => {
-      // تعيين الخيارات بشكل فريد
-      const optionsKey = `atOptions_${scriptKey.replace(/-/g, '_')}`;
-      window[optionsKey] = {
-        ...ad.config,
-        params: {}
-      };
-      
-      const script = document.createElement('script');
-      script.src = ad.script;
-      script.async = true;
-      script.setAttribute('data-cfasync', 'false');
-      script.id = `script-${uniqueId}`;
-      
-      // استخدام atOptions المحدد
-      script.onload = () => {
-        console.log(`✅ تم تحميل إعلان: ${ad.id}`);
-      };
-      
-      script.onerror = () => {
-        console.warn(`⚠️ فشل تحميل إعلان: ${ad.id}`);
-      };
-      
-      const targetElement = document.getElementById(`banner-${uniqueId}`);
-      if (targetElement) {
-        targetElement.appendChild(script);
-      }
+        const script = document.createElement('script');
+        script.src = ad.script;
+        script.async = true;
+        script.setAttribute('data-cfasync', 'false');
+        script.id = `script-${uniqueId}`;
+        
+        script.onload = () => {
+            console.log(`✅ تم تحميل إعلان: ${ad.id}`);
+        };
+        
+        script.onerror = () => {
+            console.warn(`⚠️ فشل تحميل إعلان: ${ad.id}`);
+            this.showFallbackInContainer(container);
+        };
+        
+        const targetElement = document.getElementById(`banner-${uniqueId}`);
+        if (targetElement) {
+            targetElement.appendChild(script);
+        }
     }, 300);
   }
 
@@ -667,8 +666,16 @@ class AdsManager {
     }
   }
 
+  // === التصحيح: دالة تحميل إعلان Sidebar ===
   loadSidebarAd(container, ad) {
     const uniqueId = `${ad.id}-${Date.now()}`;
+    
+    // ⚠️ التصحيح: استخدام atOptions ثابت
+    window.atOptions = window.atOptions || {};
+    Object.assign(window.atOptions, {
+        ...ad.config,
+        params: ad.config?.params || {}
+    });
     
     const adDiv = document.createElement('div');
     adDiv.className = 'ad-banner ad-sidebar';
@@ -681,23 +688,25 @@ class AdsManager {
     container.appendChild(adDiv);
     
     setTimeout(() => {
-      const optionsKey = `atOptions_sidebar_${uniqueId.replace(/-/g, '_')}`;
-      window[optionsKey] = {
-        ...ad.config,
-        params: {}
-      };
-      
-      const script = document.createElement('script');
-      script.src = ad.script;
-      script.async = true;
-      script.setAttribute('data-cfasync', 'false');
-      script.id = `sidebar-script-${uniqueId}`;
-      
-      const targetElement = document.getElementById(`sidebar-${uniqueId}`);
-      if (targetElement) {
-        targetElement.appendChild(script);
-        console.log(`✅ Sidebar Ad loaded: ${ad.id}`);
-      }
+        const script = document.createElement('script');
+        script.src = ad.script;
+        script.async = true;
+        script.setAttribute('data-cfasync', 'false');
+        script.id = `sidebar-script-${uniqueId}`;
+        
+        script.onload = () => {
+            console.log(`✅ Sidebar Ad loaded: ${ad.id}`);
+        };
+        
+        script.onerror = () => {
+            console.warn(`⚠️ فشل تحميل Sidebar Ad: ${ad.id}`);
+            this.showFallbackInContainer(container);
+        };
+        
+        const targetElement = document.getElementById(`sidebar-${uniqueId}`);
+        if (targetElement) {
+            targetElement.appendChild(script);
+        }
     }, 300);
   }
 
@@ -954,7 +963,36 @@ class AdsManager {
     });
   }
 
-  // === 18. إدارة الجلسة ===
+  // === 18. دالة عرض بديل عند فشل الإعلان ===
+  showFallbackInContainer(container) {
+    if (!container) return;
+    
+    container.innerHTML = `
+        <div class="ad-banner" style="text-align:center;padding:20px;">
+            <div class="ad-label">Advertisement</div>
+            <p style="color:#fff;margin:10px 0;">Support our site by allowing ads</p>
+            <p style="color:rgba(255,255,255,0.7);font-size:12px;margin-top:10px;">
+                Ad failed to load. Please check your ad blocker settings.
+            </p>
+        </div>
+    `;
+    
+    setTimeout(() => {
+        if (container.innerHTML.includes('Ad failed to load')) {
+            container.innerHTML = `
+                <div class="ad-banner" style="text-align:center;padding:15px;">
+                    <div class="ad-label">Sponsored</div>
+                    <div style="color:#fff;padding:10px;">
+                        <p style="margin:5px 0;">Play more games at FreePlayHub</p>
+                        <a href="https://rowhub.github.io" style="color:#3498db;text-decoration:none;">Browse All Games</a>
+                    </div>
+                </div>
+            `;
+        }
+    }, 15000);
+  }
+
+  // === 19. إدارة الجلسة ===
   getSessionData() {
     try {
       const data = sessionStorage.getItem('adsSessionData');
@@ -986,7 +1024,7 @@ class AdsManager {
     }
   }
 
-  // === 19. تصفية أخطاء Unity ===
+  // === 20. تصفية أخطاء Unity ===
   filterUnityErrors() {
     const originalError = console.error;
     console.error = function(...args) {
@@ -1000,12 +1038,12 @@ class AdsManager {
     };
   }
 
-  // === 20. دالة مساعدة للتأخير ===
+  // === 21. دالة مساعدة للتأخير ===
   delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  // === 21. تنظيف الموارد ===
+  // === 22. تنظيف الموارد ===
   destroy() {
     Object.values(this.rotationTimers).forEach(timer => clearInterval(timer));
     this.rotationTimers = {};
