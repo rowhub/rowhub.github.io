@@ -1,7 +1,7 @@
 {
   "antiAdblock": {
     "enabled": false,
-    "showWarning": true,
+    "showWarning": false,
     "warningPosition": "bottom-right",
     "warningDuration": 10000
   },
