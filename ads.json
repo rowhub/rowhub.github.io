@@ -9,10 +9,17 @@
   "popunder": {
     "enabled": true,
     "frequency": "once_per_session",
+    "maxPerSession": 1,
     "delay": 8000,
     "scripts": [
-      "https://pl28343653.effectivegatecpm.com/ee/e1/38/eee138143a437f55b34a35df0abbfbfe.js"
+      "https://pl28343660.effectivegatecpm.com/d3/01/ff/d301ff1e4475b527cf2dccff540822e5.js"
     ]
+  },
+  
+  "socialBar": {
+    "enabled": true,
+    "delay": 5000,
+    "script": "https://pl28343653.effectivegatecpm.com/ee/e1/38/eee138143a437f55b34a35df0abbfbfe.js"
   },
   
   "nativeBanner": {
@@ -28,13 +35,23 @@
       "rotationInterval": 30000,
       "ads": [
         {
-          "id": "banner-728x90-top",
+          "id": "banner-728x90-top-1",
           "script": "https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js",
           "config": {
             "key": "a29bc677676d4759eafbbf48bff57ae3",
             "format": "iframe",
             "height": 90,
             "width": 728
+          }
+        },
+        {
+          "id": "banner-468x60-top",
+          "script": "https://www.highperformanceformat.com/b07536416d988628a30c9fd13c94a851/invoke.js",
+          "config": {
+            "key": "b07536416d988628a30c9fd13c94a851",
+            "format": "iframe",
+            "height": 60,
+            "width": 468
           }
         }
       ]
@@ -46,7 +63,17 @@
       "rotationInterval": 25000,
       "ads": [
         {
-          "id": "banner-320x50-bottom",
+          "id": "banner-728x90-below",
+          "script": "https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js",
+          "config": {
+            "key": "a29bc677676d4759eafbbf48bff57ae3",
+            "format": "iframe",
+            "height": 90,
+            "width": 728
+          }
+        },
+        {
+          "id": "banner-320x50-below",
           "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
           "config": {
             "key": "af340b221e82600db1aeec2c3bd2cd9c",
@@ -61,6 +88,7 @@
     "pageBottom": {
       "enabled": true,
       "rotation": true,
+      "rotationInterval": 35000,
       "ads": [
         {
           "id": "banner-728x90-bottom",
@@ -71,6 +99,44 @@
             "height": 90,
             "width": 728
           }
+        },
+        {
+          "id": "banner-300x250-bottom",
+          "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
+          "config": {
+            "key": "c84b7f14ef2b488fb99e7411123accf1",
+            "format": "iframe",
+            "height": 250,
+            "width": 300
+          }
+        }
+      ]
+    },
+    
+    "pageMiddle": {
+      "enabled": true,
+      "rotation": true,
+      "rotationInterval": 40000,
+      "ads": [
+        {
+          "id": "banner-300x250-middle",
+          "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
+          "config": {
+            "key": "c84b7f14ef2b488fb99e7411123accf1",
+            "format": "iframe",
+            "height": 250,
+            "width": 300
+          }
+        },
+        {
+          "id": "banner-468x60-middle",
+          "script": "https://www.highperformanceformat.com/b07536416d988628a30c9fd13c94a851/invoke.js",
+          "config": {
+            "key": "b07536416d988628a30c9fd13c94a851",
+            "format": "iframe",
+            "height": 60,
+            "width": 468
+          }
         }
       ]
     }
@@ -79,16 +145,64 @@
   "sidebarAd": {
     "enabled": true,
     "rotation": true,
-    "rotationInterval": 40000,
+    "rotationInterval": 45000,
     "ads": [
       {
-        "id": "sidebar-160x300",
+        "id": "sidebar-160x300-1",
         "script": "https://www.highperformanceformat.com/77500fee8ec2644cacc4361ea5fac945/invoke.js",
         "config": {
           "key": "77500fee8ec2644cacc4361ea5fac945",
           "format": "iframe",
           "height": 300,
           "width": 160
+        }
+      },
+      {
+        "id": "sidebar-160x600",
+        "script": "https://www.highperformanceformat.com/c4bc6a456a9544ff74b98a472c52ea91/invoke.js",
+        "config": {
+          "key": "c4bc6a456a9544ff74b98a472c52ea91",
+          "format": "iframe",
+          "height": 600,
+          "width": 160
+        }
+      },
+      {
+        "id": "sidebar-300x250",
+        "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
+        "config": {
+          "key": "c84b7f14ef2b488fb99e7411123accf1",
+          "format": "iframe",
+          "height": 250,
+          "width": 300
+        }
+      }
+    ]
+  },
+  
+  "sidebarAdExtra": {
+    "enabled": true,
+    "rotation": true,
+    "rotationInterval": 50000,
+    "ads": [
+      {
+        "id": "sidebar-extra-160x300",
+        "script": "https://www.highperformanceformat.com/77500fee8ec2644cacc4361ea5fac945/invoke.js",
+        "config": {
+          "key": "77500fee8ec2644cacc4361ea5fac945",
+          "format": "iframe",
+          "height": 300,
+          "width": 160
+        }
+      },
+      {
+        "id": "sidebar-extra-300x250",
+        "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
+        "config": {
+          "key": "c84b7f14ef2b488fb99e7411123accf1",
+          "format": "iframe",
+          "height": 250,
+          "width": 300
         }
       }
     ]
@@ -99,6 +213,6 @@
     "url": "https://www.effectivegatecpm.com/chp2ch8k1?key=82481be5d622d93cd10096e789662cb4",
     "frequency": "once_per_session",
     "openInNewTab": true,
-    "delay": 2000
+    "delay": 3000
   }
 }
