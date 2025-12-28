@@ -1,4 +1,12 @@
 {
+  "antiAdblock": {
+    "enabled": true,
+    "strictMode": true,
+    "blockPage": true,
+    "message": "Ad Blocker Detected - Please disable ad blocker to access this free game",
+    "monitoring": true
+  },
+  
   "popunder": {
     "enabled": true,
     "frequency": "once_per_session",
@@ -29,19 +37,8 @@
             "height": 90,
             "width": 728
           }
-        },
-        {
-          "id": "banner-468x60-top",
-          "script": "https://www.highperformanceformat.com/b07536416d988628a30c9fd13c94a851/invoke.js",
-          "config": {
-            "key": "b07536416d988628a30c9fd13c94a851",
-            "format": "iframe",
-            "height": 60,
-            "width": 468
-          }
         }
-      ],
-      "fallbackHtml": "<div class='ad-banner'><div class='ad-label'>Ad</div><h4 style='color:#ffd700;'>Premium Game Hosting</h4><a href='https://example.com' target='_blank' style='display:inline-block;background:#6c5ce7;color:white;padding:8px 20px;border-radius:5px;text-decoration:none;margin-top:10px;'>Learn More</a></div>"
+      ]
     },
     
     "belowIframe": {
@@ -58,19 +55,8 @@
             "height": 50,
             "width": 320
           }
-        },
-        {
-          "id": "banner-300x250-bottom",
-          "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
-          "config": {
-            "key": "c84b7f14ef2b488fb99e7411123accf1",
-            "format": "iframe",
-            "height": 250,
-            "width": 300
-          }
         }
-      ],
-      "fallbackHtml": "<div class='ad-banner'><div class='ad-label'>Ad</div><h4 style='color:white;'>Play More Games</h4><a href='https://rowhub.github.io' style='display:inline-block;background:#1a2a6c;color:white;padding:8px 20px;border-radius:5px;text-decoration:none;margin-top:10px;'>Browse All Games</a></div>"
+      ]
     },
     
     "pageBottom": {
@@ -87,8 +73,7 @@
             "width": 728
           }
         }
-      ],
-      "fallbackHtml": "<div class='ad-banner'><div class='ad-label'>Support Us</div><h3 style='color:white;'>Enjoying Free Games?</h3><p style='color:rgba(255,255,255,0.9);'>Please consider disabling AdBlock to support our free service.</p><a href='https://example.com/donate' target='_blank' style='display:inline-block;background:#ffd700;color:#333;padding:10px 25px;border-radius:5px;text-decoration:none;font-weight:bold;'>Support Now</a></div>"
+      ]
     }
   },
   
@@ -106,35 +91,15 @@
           "height": 300,
           "width": 160
         }
-      },
-      {
-        "id": "sidebar-160x600",
-        "script": "https://www.highperformanceformat.com/c4bc6a456a9544ff74b98a472c52ea91/invoke.js",
-        "config": {
-          "key": "c4bc6a456a9544ff74b98a472c52ea91",
-          "format": "iframe",
-          "height": 600,
-          "width": 160
-        }
       }
-    ],
-    "fallbackHtml": "<div class='ad-banner'><div class='ad-label'>Sponsored</div><h4 style='color:#3CF7DC;'>Game Development</h4><a href='https://example.com/learn' target='_blank' style='display:inline-block;background:#6c5ce7;color:white;padding:10px 20px;border-radius:5px;text-decoration:none;font-weight:bold;'>Start Learning</a></div>"
+    ]
   },
   
   "smartlink": {
     "enabled": true,
     "url": "https://www.effectivegatecpm.com/chp2ch8k1?key=82481be5d622d93cd10096e789662cb4",
-    "triggerOn": "game_load",
     "frequency": "once_per_session",
     "openInNewTab": true,
     "delay": 2000
-  },
-  
-  "interstitialAd": {
-    "enabled": false,
-    "frequency": "once_per_session",
-    "delay": 15000,
-    "script": "https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js",
-    "html": "<div style='text-align:center;'><h2>Advertisement</h2><p>Please watch this short ad to support our free game service</p><div id='interstitial-content' style='min-height:300px;background:#f5f5f5;'></div></div>"
   }
 }
