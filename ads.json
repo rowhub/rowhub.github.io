@@ -11,17 +11,19 @@
       "delayBetweenAds": 2000,
       "comment": "تأخير محسّن: 1 ثانية قبل أول إعلان، 2 ثواني بين الإعلانات"
     },
-    "config": {
-  "antiAdblock": {
-    "enabled": true,
-    "message": "Our games are 100% free and always will be! We don't ask for payments or registration - only ads support our service. Please consider disabling your ad blocker to help us keep providing free games.",
-    "showOnlyOnce": false,
-    "redirectUrl": null,
-    "detectionMethods": ["element", "script", "fetch", "iframe"],
-    "messageStyle": "modern",
-    "autoRefresh": true,
-    "closeButton": true,
-    "comment": "نظام Anti-Adblock متطور - 6 طرق كشف مختلفة، رسالة تفاعلية"
+    {
+  "config": {
+    "antiAdblock": {
+      "enabled": true,
+      "message": "Our games are 100% free and always will be! We don't ask for payments or registration - only ads support our service. Please consider disabling your ad blocker to help us keep providing free games.",
+      "strictMode": true,
+      "lockPage": true,
+      "disableInteractions": true,
+      "autoRefreshCheck": true,
+      "checkInterval": 3000,
+      "showInstructions": true,
+      "comment": "نظام Anti-Adblock صارم - يمنع التفاعل مع الصفحة تماماً"
+    }
   }
 }
   },
