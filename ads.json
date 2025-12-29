@@ -1,3 +1,5 @@
+[file name]: ads.json
+[file content begin]
 {
   "antiAdblock": {
     "enabled": true,
@@ -35,49 +37,7 @@
       "rotationInterval": 30000,
       "ads": [
         {
-          "id": "banner-320x50-top-mobile",
-          "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
-          "config": {
-            "key": "af340b221e82600db1aeec2c3bd2cd9c",
-            "format": "iframe",
-            "height": 50,
-            "width": 320,
-            "params": {
-              "domain": "rowhub.github.io",
-              "source": "highperformanceformat"
-            }
-          }
-        },
-        {
-          "id": "banner-300x250-top",
-          "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
-          "config": {
-            "key": "c84b7f14ef2b488fb99e7411123accf1",
-            "format": "iframe",
-            "height": 250,
-            "width": 300,
-            "params": {
-              "domain": "rowhub.github.io",
-              "source": "highperformanceformat"
-            }
-          }
-        },
-        {
-          "id": "banner-468x60-top-tablet",
-          "script": "https://www.highperformanceformat.com/b07536416d988628a30c9fd13c94a851/invoke.js",
-          "config": {
-            "key": "b07536416d988628a30c9fd13c94a851",
-            "format": "iframe",
-            "height": 60,
-            "width": 468,
-            "params": {
-              "domain": "rowhub.github.io",
-              "source": "highperformanceformat"
-            }
-          }
-        },
-        {
-          "id": "banner-728x90-top-desktop",
+          "id": "banner-728x90-top-1",
           "script": "https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js",
           "config": {
             "key": "a29bc677676d4759eafbbf48bff57ae3",
@@ -88,6 +48,32 @@
               "domain": "rowhub.github.io",
               "source": "highperformanceformat"
             }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 50,
+            "width": 320
+          }
+        },
+        {
+          "id": "banner-468x60-top",
+          "script": "https://www.highperformanceformat.com/b07536416d988628a30c9fd13c94a851/invoke.js",
+          "config": {
+            "key": "b07536416d988628a30c9fd13c94a851",
+            "format": "iframe",
+            "height": 60,
+            "width": 468,
+            "params": {
+              "domain": "rowhub.github.io",
+              "source": "highperformanceformat"
+            }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 50,
+            "width": 320
           }
         }
       ]
@@ -99,35 +85,7 @@
       "rotationInterval": 25000,
       "ads": [
         {
-          "id": "banner-320x50-below-mobile",
-          "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
-          "config": {
-            "key": "af340b221e82600db1aeec2c3bd2cd9c",
-            "format": "iframe",
-            "height": 50,
-            "width": 320,
-            "params": {
-              "domain": "rowhub.github.io",
-              "source": "highperformanceformat"
-            }
-          }
-        },
-        {
-          "id": "banner-300x250-below",
-          "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
-          "config": {
-            "key": "c84b7f14ef2b488fb99e7411123accf1",
-            "format": "iframe",
-            "height": 250,
-            "width": 300,
-            "params": {
-              "domain": "rowhub.github.io",
-              "source": "highperformanceformat"
-            }
-          }
-        },
-        {
-          "id": "banner-728x90-below-desktop",
+          "id": "banner-728x90-below",
           "script": "https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js",
           "config": {
             "key": "a29bc677676d4759eafbbf48bff57ae3",
@@ -138,6 +96,32 @@
               "domain": "rowhub.github.io",
               "source": "highperformanceformat"
             }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 50,
+            "width": 320
+          }
+        },
+        {
+          "id": "banner-320x50-below",
+          "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+          "config": {
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "format": "iframe",
+            "height": 50,
+            "width": 320,
+            "params": {
+              "domain": "rowhub.github.io",
+              "source": "highperformanceformat"
+            }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 50,
+            "width": 320
           }
         }
       ]
@@ -149,17 +133,23 @@
       "rotationInterval": 35000,
       "ads": [
         {
-          "id": "banner-320x50-bottom-mobile",
-          "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+          "id": "banner-728x90-bottom",
+          "script": "https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js",
           "config": {
-            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "key": "a29bc677676d4759eafbbf48bff57ae3",
             "format": "iframe",
-            "height": 50,
-            "width": 320,
+            "height": 90,
+            "width": 728,
             "params": {
               "domain": "rowhub.github.io",
               "source": "highperformanceformat"
             }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 50,
+            "width": 320
           }
         },
         {
@@ -174,20 +164,12 @@
               "domain": "rowhub.github.io",
               "source": "highperformanceformat"
             }
-          }
-        },
-        {
-          "id": "banner-728x90-bottom-desktop",
-          "script": "https://www.highperformanceformat.com/a29bc677676d4759eafbbf48bff57ae3/invoke.js",
-          "config": {
-            "key": "a29bc677676d4759eafbbf48bff57ae3",
-            "format": "iframe",
-            "height": 90,
-            "width": 728,
-            "params": {
-              "domain": "rowhub.github.io",
-              "source": "highperformanceformat"
-            }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 100,
+            "width": 320
           }
         }
       ]
@@ -210,24 +192,16 @@
               "domain": "rowhub.github.io",
               "source": "highperformanceformat"
             }
-          }
-        },
-        {
-          "id": "banner-320x50-middle-mobile",
-          "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
-          "config": {
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
             "key": "af340b221e82600db1aeec2c3bd2cd9c",
-            "format": "iframe",
-            "height": 50,
-            "width": 320,
-            "params": {
-              "domain": "rowhub.github.io",
-              "source": "highperformanceformat"
-            }
+            "height": 100,
+            "width": 320
           }
         },
         {
-          "id": "banner-468x60-middle-tablet",
+          "id": "banner-468x60-middle",
           "script": "https://www.highperformanceformat.com/b07536416d988628a30c9fd13c94a851/invoke.js",
           "config": {
             "key": "b07536416d988628a30c9fd13c94a851",
@@ -238,6 +212,12 @@
               "domain": "rowhub.github.io",
               "source": "highperformanceformat"
             }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 50,
+            "width": 320
           }
         }
       ]
@@ -250,20 +230,6 @@
     "rotationInterval": 45000,
     "ads": [
       {
-        "id": "sidebar-300x250-mobile",
-        "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
-        "config": {
-          "key": "c84b7f14ef2b488fb99e7411123accf1",
-          "format": "iframe",
-          "height": 250,
-          "width": 300,
-          "params": {
-            "domain": "rowhub.github.io",
-            "source": "highperformanceformat"
-          }
-        }
-      },
-      {
         "id": "sidebar-160x300-1",
         "script": "https://www.highperformanceformat.com/77500fee8ec2644cacc4361ea5fac945/invoke.js",
         "config": {
@@ -275,66 +241,111 @@
             "domain": "rowhub.github.io",
             "source": "highperformanceformat"
           }
+        },
+        "mobileConfig": {
+          "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+          "key": "af340b221e82600db1aeec2c3bd2cd9c",
+          "height": 100,
+          "width": 300
         }
       },
       {
-        "id": "sidebar-160x600-desktop",
+        "id": "sidebar-160x600",
         "script": "https://www.highperformanceformat.com/c4bc6a456a9544ff74b98a472c52ea91/invoke.js",
         "config": {
           "key": "c4bc6a456a9544ff74b98a472c52ea91",
-          "format": "iframe",
-          "height": 600,
-          "width": 160,
-          "params": {
-            "domain": "rowhub.github.io",
-            "source": "highperformanceformat"
+            "format": "iframe",
+            "height": 600,
+            "width": 160,
+            "params": {
+              "domain": "rowhub.github.io",
+              "source": "highperformanceformat"
+            }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 150,
+            "width": 300
+          }
+        },
+        {
+          "id": "sidebar-300x250",
+          "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
+          "config": {
+            "key": "c84b7f14ef2b488fb99e7411123accf1",
+            "format": "iframe",
+            "height": 250,
+            "width": 300,
+            "params": {
+              "domain": "rowhub.github.io",
+              "source": "highperformanceformat"
+            }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 100,
+            "width": 300
           }
         }
-      }
-    ]
-  },
-  
-  "sidebarAdExtra": {
-    "enabled": true,
-    "rotation": true,
-    "rotationInterval": 50000,
-    "ads": [
-      {
-        "id": "sidebar-extra-300x250-mobile",
-        "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
-        "config": {
-          "key": "c84b7f14ef2b488fb99e7411123accf1",
-          "format": "iframe",
-          "height": 250,
-          "width": 300,
-          "params": {
-            "domain": "rowhub.github.io",
-            "source": "highperformanceformat"
+      ]
+    },
+    
+    "sidebarAdExtra": {
+      "enabled": true,
+      "rotation": true,
+      "rotationInterval": 50000,
+      "ads": [
+        {
+          "id": "sidebar-extra-160x300",
+          "script": "https://www.highperformanceformat.com/77500fee8ec2644cacc4361ea5fac945/invoke.js",
+          "config": {
+            "key": "77500fee8ec2644cacc4361ea5fac945",
+            "format": "iframe",
+            "height": 300,
+            "width": 160,
+            "params": {
+              "domain": "rowhub.github.io",
+              "source": "highperformanceformat"
+            }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 100,
+            "width": 300
+          }
+        },
+        {
+          "id": "sidebar-extra-300x250",
+          "script": "https://www.highperformanceformat.com/c84b7f14ef2b488fb99e7411123accf1/invoke.js",
+          "config": {
+            "key": "c84b7f14ef2b488fb99e7411123accf1",
+            "format": "iframe",
+            "height": 250,
+            "width": 300,
+            "params": {
+              "domain": "rowhub.github.io",
+              "source": "highperformanceformat"
+            }
+          },
+          "mobileConfig": {
+            "script": "https://www.highperformanceformat.com/af340b221e82600db1aeec2c3bd2cd9c/invoke.js",
+            "key": "af340b221e82600db1aeec2c3bd2cd9c",
+            "height": 100,
+            "width": 300
           }
         }
-      },
-      {
-        "id": "sidebar-extra-160x300",
-        "script": "https://www.highperformanceformat.com/77500fee8ec2644cacc4361ea5fac945/invoke.js",
-        "config": {
-          "key": "77500fee8ec2644cacc4361ea5fac945",
-          "format": "iframe",
-          "height": 300,
-          "width": 160,
-          "params": {
-            "domain": "rowhub.github.io",
-            "source": "highperformanceformat"
-          }
-        }
-      }
-    ]
-  },
-  
-  "smartlink": {
-    "enabled": true,
-    "url": "https://www.effectivegatecpm.com/chp2ch8k1?key=82481be5d622d93cd10096e789662cb4",
-    "frequency": "once_per_session",
-    "openInNewTab": true,
-    "delay": 3000
+      ]
+    },
+    
+    "smartlink": {
+      "enabled": true,
+      "url": "https://www.effectivegatecpm.com/chp2ch8k1?key=82481be5d622d93cd10096e789662cb4",
+      "frequency": "once_per_session",
+      "openInNewTab": true,
+      "delay": 3000
+    }
   }
-}
+[file content end]
