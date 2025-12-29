@@ -1,5 +1,5 @@
 /**
- * 🎯 نظام إدارة الإعلانات الذكية - النسخة المحسّنة والمُصلحة
+ * 🎯 نظام إدارة الإعلانات الذكي - النسخة المحسّنة والمُصلحة
  * ✅ إصلاح البانرات السوداء
  * ✅ إصلاح Popunder للعمل مرة واحدة فقط
  * ✅ إضافة جميع الإعلانات الجديدة
@@ -499,14 +499,7 @@ class AdsManager {
     
     const ads = bannerConfig.ads;
     if (!ads || ads.length === 0) return;
-    // منع الإعلانات الكبيرة على الموبايل
-const screenWidth = window.innerWidth;
-
-if (screenWidth <= 480 && ad.config.width > 360) {
-  console.log(`📱 تخطي إعلان كبير على الهاتف: ${ad.id}`);
-  return;
-}
-
+    
     // تحميل أول إعلان
     this.loadSingleAd(container, ads[0], containerId);
     
@@ -752,31 +745,43 @@ if (screenWidth <= 480 && ad.config.width > 360) {
     const maxPerSession = this.config.popunder.maxPerSession || 1;
     
     // التحقق من عدد المرات المسموح بها
-    loadPopunder() {
-  if (!this.config.popunder?.enabled) return;
-
-  // 🔒 منع التكرار داخل نفس الصفحة فقط
-  if (this.sessionData.popunderShown) {
-    console.log('⚠️ Popunder already shown on this page');
-    return;
+    if (frequency === 'once_per_session') {
+      const currentCount = this.sessionData.popunderCount || 0;
+      
+      if (currentCount >= maxPerSession) {
+        console.log(`⚠️ Popunder limit reached: ${currentCount}/${maxPerSession}`);
+        return;
+      }
+    }
+    
+    setTimeout(() => {
+      this.config.popunder.scripts.forEach((scriptUrl, index) => {
+        // التحقق من عدم تحميل السكريبت مسبقاً
+        if (this.loadedScripts.has(scriptUrl)) {
+          console.log(`⚠️ Popunder script already loaded: ${scriptUrl}`);
+          return;
+        }
+        
+        const script = document.createElement('script');
+        script.src = scriptUrl;
+        script.async = true;
+        script.setAttribute('data-cfasync', 'false');
+        script.id = `popunder-script-${index}`;
+        
+        document.body.appendChild(script);
+        this.loadedScripts.add(scriptUrl);
+        
+        console.log(`✅ Popunder script loaded: ${scriptUrl}`);
+      });
+      
+      // تحديث العداد
+      this.sessionData.popunderCount = (this.sessionData.popunderCount || 0) + 1;
+      this.sessionData.popunderShown = true;
+      this.saveSessionData();
+      
+      console.log(`📊 Popunder count: ${this.sessionData.popunderCount}/${maxPerSession}`);
+    }, this.config.popunder.delay || 8000);
   }
-
-  setTimeout(() => {
-    this.config.popunder.scripts.forEach(scriptUrl => {
-      const script = document.createElement('script');
-      script.src = scriptUrl;
-      script.async = true;
-      script.setAttribute('data-cfasync', 'false');
-      document.body.appendChild(script);
-    });
-
-    // ✅ تم عرضه في هذه الصفحة
-    this.sessionData.popunderShown = true;
-    sessionStorage.setItem('adsSessionData', JSON.stringify(this.sessionData));
-
-    console.log('✅ Popunder shown (will appear again after refresh)');
-  }, this.config.popunder.delay || 8000);
-}
 
   // === 14. تحميل Smartlink - مُصلح ✅ ===
   loadSmartlink() {
