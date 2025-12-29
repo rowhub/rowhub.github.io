@@ -499,6 +499,15 @@ class AdsManager {
     
     const ads = bannerConfig.ads;
     if (!ads || ads.length === 0) return;
+
+    // منع الإعلانات الكبيرة على الموبايل
+const screenWidth = window.innerWidth;
+
+if (screenWidth <= 480 && ad.config.width > 360) {
+  console.log(`📱 تخطي إعلان كبير على الهاتف: ${ad.id}`);
+  return;
+}
+
     
     // تحميل أول إعلان
     this.loadSingleAd(container, ads[0], containerId);
