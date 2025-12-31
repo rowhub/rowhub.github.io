@@ -1,5 +1,5 @@
 /**
- * 🎯 نظام إدارة الإعلانات الذكية - النسخة المحسّنة والمُصلحة
+ * 🎯 نظام إدارة الإعلانات الذكي - النسخة المحسّنة والمُصلحة
  * ✅ إصلاح البانرات السوداء
  * ✅ إصلاح Popunder للعمل مرة واحدة فقط
  * ✅ إضافة جميع الإعلانات الجديدة
@@ -432,6 +432,37 @@ class AdsManager {
   }
 
   // === 6. تحميل جميع الإعلانات ===
+  // 🔒 Popunder Hard Lock (NO repeat inside same page)
+(function () {
+  const POP_KEY = 'POPUNDER_LOCK';
+  const POP_TIME_KEY = 'POPUNDER_TIME';
+
+  const NOW = Date.now();
+  const COOLDOWN = 0; // 0 = لا يعيد الظهور إلا بعد refresh
+
+  const lastTime = sessionStorage.getItem(POP_TIME_KEY);
+  const isLocked = sessionStorage.getItem(POP_KEY);
+
+  // ⛔ إذا سبق ظهوره داخل الصفحة → امنعه
+  if (isLocked) {
+    console.log('⛔ Popunder blocked (already shown on this page)');
+    window.__BLOCK_POPUNDER__ = true;
+    return;
+  }
+
+  // ⛔ لو أردت تحكم زمني
+  if (lastTime && NOW - lastTime < COOLDOWN) {
+    console.log('⛔ Popunder blocked (cooldown)');
+    window.__BLOCK_POPUNDER__ = true;
+    return;
+  }
+
+  // ✅ السماح مرة واحدة فقط
+  sessionStorage.setItem(POP_KEY, '1');
+  sessionStorage.setItem(POP_TIME_KEY, NOW.toString());
+  window.__BLOCK_POPUNDER__ = false;
+})();
+
   async loadAllAds() {
     console.log('📦 بدء تحميل جميع الإعلانات...');
     
@@ -737,52 +768,50 @@ class AdsManager {
     }, this.config.socialBar.delay || 5000);
   }
 
-  // === 13. تحميل Popunder - تحكم دقيق (مرة واحدة لكل تحميل صفحة) ===
+  // === 13. تحميل Popunder - مُصلح ✅ ===
   loadPopunder() {
     if (!this.config.popunder?.enabled) return;
     
-    // 1. قراءة التوقيت من الإعدادات
-    const delay = this.config.popunder.delay || 5000;         // وقت الانتظار قبل البدء
-    const repeatTime = this.config.popunder.repeatInterval || 0; // 0 تعني مرة واحدة فقط
+    const frequency = this.config.popunder.frequency;
+    const maxPerSession = this.config.popunder.maxPerSession || 1;
     
-    // متغير لتتبع هل الإعلان نشط حالياً في الصفحة
-    // هذا المتغير يُحذف تلقائياً عند عمل Refresh للصفحة
-    this.isPopunderRunning = false;
-
-    const runAd = () => {
-      // إذا كان الإعلان قد ظهر بالفعل والوقت مبرمج على 0 (مرة واحدة)، لا تفعل شيئاً
-      if (this.isPopunderRunning && repeatTime === 0) return;
-
-      this.config.popunder.scripts.forEach((scriptUrl) => {
-        // إزالة السكريبت القديم إن وجد لضمان تشغيل الجديد
-        const oldScript = document.querySelector(`script[src="${scriptUrl}"]`);
-        if (oldScript) oldScript.remove();
-
+    // التحقق من عدد المرات المسموح بها
+    if (frequency === 'once_per_session') {
+      const currentCount = this.sessionData.popunderCount || 0;
+      
+      if (currentCount >= maxPerSession) {
+        console.log(`⚠️ Popunder limit reached: ${currentCount}/${maxPerSession}`);
+        return;
+      }
+    }
+    
+    setTimeout(() => {
+      this.config.popunder.scripts.forEach((scriptUrl, index) => {
+        // التحقق من عدم تحميل السكريبت مسبقاً
+        if (this.loadedScripts.has(scriptUrl)) {
+          console.log(`⚠️ Popunder script already loaded: ${scriptUrl}`);
+          return;
+        }
+        
         const script = document.createElement('script');
-        script.src = scriptUrl; // بدون أي إضافات لضمان عمل الرابط
+        script.src = scriptUrl;
         script.async = true;
         script.setAttribute('data-cfasync', 'false');
+        script.id = `popunder-script-${index}`;
         
         document.body.appendChild(script);
-        console.log(`✅ Popunder Script Inserted`);
+        this.loadedScripts.add(scriptUrl);
+        
+        console.log(`✅ Popunder script loaded: ${scriptUrl}`);
       });
-
-      this.isPopunderRunning = true; // وضع علامة أن الإعلان تم تشغيله
-    };
-
-    // 2. التشغيل الأول بعد وقت التأخير (Delay)
-    console.log(`⏳ Popunder scheduled in ${delay/1000}s`);
-    setTimeout(() => {
-      runAd();
-
-      // 3. إذا كنت قد حددت وقتاً للتكرار في json، سيقوم بهذا الجزء
-      if (repeatTime > 0) {
-        console.log(`🔄 Popunder will repeat every ${repeatTime/1000}s`);
-        setInterval(() => {
-          runAd();
-        }, repeatTime);
-      }
-    }, delay);
+      
+      // تحديث العداد
+      this.sessionData.popunderCount = (this.sessionData.popunderCount || 0) + 1;
+      this.sessionData.popunderShown = true;
+      this.saveSessionData();
+      
+      console.log(`📊 Popunder count: ${this.sessionData.popunderCount}/${maxPerSession}`);
+    }, this.config.popunder.delay || 8000);
   }
 
   // === 14. تحميل Smartlink - مُصلح ✅ ===
