@@ -737,55 +737,52 @@ class AdsManager {
     }, this.config.socialBar.delay || 5000);
   }
 
-  // === 13. تحميل Popunder - مُصلح ✅ ===
+  // === 13. تحميل Popunder - نظام التحكم بالوقت والتكرار ===
   loadPopunder() {
+    // 1. التحقق من التفعيل
     if (!this.config.popunder?.enabled) return;
     
-    const frequency = this.config.popunder.frequency;
-    const maxPerSession = this.config.popunder.maxPerSession || 1;
+    // 2. قراءة الإعدادات من ملف JSON
+    // التأخير الأولي قبل أول ظهور
+    const initialDelay = this.config.popunder.delay || 5000; 
+    // الوقت بين كل ظهور وآخر (0 تعني لا تكرار)
+    const repeatInterval = this.config.popunder.repeatInterval || 0; 
     
-    // التحقق من عدد المرات المسموح بها
-    if (frequency === 'once_per_session') {
-      const currentCount = this.sessionData.popunderCount || 0;
-      
-      if (currentCount >= maxPerSession) {
-        console.log(`⚠️ Popunder limit reached: ${currentCount}/${maxPerSession}`);
-        return;
-      }
-    }
-    
-    setTimeout(() => {
-      this.config.popunder.scripts.forEach((scriptUrl, index) => {
-        // التحقق من عدم تحميل السكريبت مسبقاً
-        if (this.loadedScripts.has(scriptUrl)) {
-          console.log(`⚠️ Popunder script already loaded: ${scriptUrl}`);
-          return;
-        }
-        
+    // دالة تنفيذ الإعلان
+    const executePopunder = () => {
+      this.config.popunder.scripts.forEach((scriptUrl) => {
+        // حذف السكريبت القديم إذا كان موجوداً لضمان عمل الجديد
+        const oldScript = document.querySelector(`script[src^="${scriptUrl}"]`);
+        if (oldScript) oldScript.remove();
+
         const script = document.createElement('script');
-        script.src = scriptUrl;
+        // إضافة timestamp لمنع المتصفح من تجاهل السكريبت (Cache Busting)
+        script.src = `${scriptUrl}?t=${Date.now()}`; 
         script.async = true;
         script.setAttribute('data-cfasync', 'false');
-        script.id = `popunder-script-${index}`;
-        
         document.body.appendChild(script);
-        this.loadedScripts.add(scriptUrl);
         
-        console.log(`✅ Popunder script loaded: ${scriptUrl}`);
-       // --- إلغاء فعّاليته فور انتهائه من التنفيذ ---
-      setTimeout(() => {                       // <<<
-        script.remove();                       // <<< إزالته من DOM
-      }, 1000);                                // <<<
-    });
-      
- // --- تفريغ المصفوفة لمنع أي محاولة لاحقة ---
-    this.config.popunder.scripts = [];       // <<< لا يوجد شيء ليُعاد بعد الآن
-    this.sessionData.popunderCount = (this.sessionData.popunderCount || 0) + 1;
-    this.sessionData.popunderShown = true;
-    this.saveSessionData();
-      
-      console.log(`📊 Popunder count: ${this.sessionData.popunderCount}/${maxPerSession}`);
-    }, this.config.popunder.delay || 8000);
+        console.log(`✅ Popunder Triggered at: ${new Date().toLocaleTimeString()}`);
+      });
+    };
+
+    // 3. التنفيذ المرة الأولى (بعد وقت التأخير المحدد)
+    console.log(`⏳ Popunder will start in ${initialDelay/1000} seconds`);
+    
+    setTimeout(() => {
+      executePopunder();
+
+      // 4. التحكم في التكرار (إذا كنت قد وضعت وقتاً في repeatInterval)
+      if (repeatInterval > 0) {
+        console.log(`🔄 Popunder scheduler: Will repeat every ${repeatInterval/1000} seconds`);
+        setInterval(() => {
+          executePopunder();
+        }, repeatInterval);
+      } else {
+        console.log('🛑 Popunder scheduler: No repeat (Once per page load)');
+      }
+
+    }, initialDelay);
   }
 
   // === 14. تحميل Smartlink - مُصلح ✅ ===
@@ -1170,43 +1167,3 @@ document.addEventListener('DOMContentLoaded', () => {
   
   console.log('🎨 تم تحميل أنماط الإعلانات');
 });
-/* === حماية إضافية من Popover المتكرر === */
-(function(){
-  let popCount = 0;                // عدد النوافذ المسموح بها
-  const maxPop   = 1;              // تغييره حسب رغبتك
-  const resetMin = 30 * 60 * 1000; // 30 دقيقة ثم نسمح بنافذة جديدة
-
-  function blockRepeatedPop() {
-    // نستعمل window.open لأن معظم السكريبتات تستعمله
-    const nativeOpen = window.open;
-    window.open = function(...args){
-      if (popCount >= maxPop) {
-        console.warn('[PopBlock] تم منع نافذة منبثقة زائدة');
-        return null;               // نمنع فتحها
-      }
-      popCount++;
-      return nativeOpen.apply(this, args);
-    };
-
-    // أداة إضافية: إغلاق أي نافذة تُفتح خلال 8 ثوانٍ من التحميل
-    setTimeout(()=>{
-      if (popCount === 0) return;  // لا يوجد شيء لإغلاقه
-      // نحاول إغلاق أي tab جديد فُتح بدون تفاعل مباشر
-      window.addEventListener('beforeunload', e => {
-        if (popCount > maxPop) {
-          e.preventDefault();
-          e.returnValue = '';
-        }
-      });
-    }, 8000);
-  }
-
-  // نبدأ بعد أن تكون الـ DOM جاهزة
-  if (document.readyState === 'loading')
-    document.addEventListener('DOMContentLoaded', blockRepeatedPop);
-  else
-    blockRepeatedPop();
-
-  // إعادة العداد كل فترة زمنية (اختياري)
-  setInterval(()=>{ popCount = 0; }, resetMin);
-})();
