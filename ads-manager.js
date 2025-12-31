@@ -1170,3 +1170,43 @@ document.addEventListener('DOMContentLoaded', () => {
   
   console.log('🎨 تم تحميل أنماط الإعلانات');
 });
+/* === حماية إضافية من Popover المتكرر === */
+(function(){
+  let popCount = 0;                // عدد النوافذ المسموح بها
+  const maxPop   = 1;              // تغييره حسب رغبتك
+  const resetMin = 30 * 60 * 1000; // 30 دقيقة ثم نسمح بنافذة جديدة
+
+  function blockRepeatedPop() {
+    // نستعمل window.open لأن معظم السكريبتات تستعمله
+    const nativeOpen = window.open;
+    window.open = function(...args){
+      if (popCount >= maxPop) {
+        console.warn('[PopBlock] تم منع نافذة منبثقة زائدة');
+        return null;               // نمنع فتحها
+      }
+      popCount++;
+      return nativeOpen.apply(this, args);
+    };
+
+    // أداة إضافية: إغلاق أي نافذة تُفتح خلال 8 ثوانٍ من التحميل
+    setTimeout(()=>{
+      if (popCount === 0) return;  // لا يوجد شيء لإغلاقه
+      // نحاول إغلاق أي tab جديد فُتح بدون تفاعل مباشر
+      window.addEventListener('beforeunload', e => {
+        if (popCount > maxPop) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      });
+    }, 8000);
+  }
+
+  // نبدأ بعد أن تكون الـ DOM جاهزة
+  if (document.readyState === 'loading')
+    document.addEventListener('DOMContentLoaded', blockRepeatedPop);
+  else
+    blockRepeatedPop();
+
+  // إعادة العداد كل فترة زمنية (اختياري)
+  setInterval(()=>{ popCount = 0; }, resetMin);
+})();
