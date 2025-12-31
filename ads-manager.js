@@ -1051,33 +1051,38 @@ class AdsManager {
     console.log('🧹 تم تنظيف موارد الإعلانات');
   }
 }
-
-// 🔒 HARD POPUNDER KILL SWITCH (REAL FIX)
+// 🧠 Popunder REAL FIX (Allow once, block repeats)
 (function () {
-  let popOpened = false;
-  const originalOpen = window.open;
+  let popAllowed = true;
 
-  window.open = function (...args) {
-    if (popOpened) {
-      console.log('⛔ Popunder blocked (window.open locked)');
-      return null;
+  // السماح لأول تفاعل فقط
+  document.addEventListener('click', function handler(e) {
+    if (!popAllowed) {
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      return false;
     }
 
-    popOpened = true;
+    // بعد أول click → امنع أي pop إضافي
+    popAllowed = false;
 
-    // 🔐 بعد أول pop، اقفل نهائيًا داخل الصفحة
+    // إزالة كل listeners بعد أول مرة
     setTimeout(() => {
-      popOpened = true;
+      document.removeEventListener('click', handler, true);
     }, 0);
 
-    return originalOpen.apply(window, args);
-  };
+  }, true);
 
-  // حماية إضافية ضد pop من iframe / focus
-  document.addEventListener('click', () => {
-    if (popOpened) return;
-    popOpened = true;
-  }, { once: true });
+  // حماية إضافية ضد focus / mouse
+  ['mousedown', 'mouseup', 'touchstart', 'focus'].forEach(evt => {
+    document.addEventListener(evt, function (e) {
+      if (!popAllowed) {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        return false;
+      }
+    }, true);
+  });
 
 })();
 
