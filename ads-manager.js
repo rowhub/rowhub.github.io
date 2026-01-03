@@ -999,26 +999,29 @@ if (this.sessionData.popunderShown) {
 
   // === 19. إدارة الجلسة ===
   getSessionData() {
-    try {
-      const data = sessionStorage.getItem('adsSessionData');
-      return data ? JSON.parse(data) : {
-        popunderShown: false,
-        popunderCount: 0,
-        smartlinkOpened: false,
-        adsLoaded: 0,
-        sessionId: Date.now()
-      };
-    } catch (error) {
-      console.error('خطأ في قراءة بيانات الجلسة:', error);
-      return {
-        popunderShown: false,
-        popunderCount: 0,
-        smartlinkOpened: false,
-        adsLoaded: 0,
-        sessionId: Date.now()
-      };
-    }
+  try {
+    const data = sessionStorage.getItem('adsSessionData');
+    const parsedData = data ? JSON.parse(data) : {};
+    
+    // تأكد من وجود جميع الخصائص المطلوبة
+    return {
+      popunderShown: parsedData.popunderShown || false,
+      popunderCount: parsedData.popunderCount || 0,
+      smartlinkOpened: parsedData.smartlinkOpened || false,
+      adsLoaded: parsedData.adsLoaded || 0,
+      sessionId: parsedData.sessionId || Date.now()
+    };
+  } catch (error) {
+    console.error('خطأ في قراءة بيانات الجلسة:', error);
+    return {
+      popunderShown: false,
+      popunderCount: 0,
+      smartlinkOpened: false,
+      adsLoaded: 0,
+      sessionId: Date.now()
+    };
   }
+}
 
   saveSessionData() {
     try {
