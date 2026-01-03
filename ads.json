@@ -7,13 +7,13 @@
   },
   
   "popunder": {
-  "enabled": true,
-  "frequency": "time_based",  // يمكن تغييرها إلى: once_per_session, time_based, unlimited
-  "maxPerSession": 1,
-  "delay": 8000,
-  "timeBetweenShows": 15,  // الفترة بالدقائق بين كل ظهور (للـ time_based)
-  "scripts": [
-    "https://pl28343660.effectivegatecpm.com/d3/01/ff/d301ff1e4475b527cf2dccff540822e5.js"
+    "enabled": true,
+    "frequency": "once_per_session",
+    "maxPerSession": 1,
+    "delay": 8000,
+    "scripts": [
+      "https://pl28343660.effectivegatecpm.com/d3/01/ff/d301ff1e4475b527cf2dccff540822e5.js"
+    ]
   },
   
   "socialBar": {
