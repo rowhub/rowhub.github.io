@@ -4,8 +4,7 @@
  * ✅ إصلاح Popunder للعمل مرة واحدة فقط
  * ✅ إضافة جميع الإعلانات الجديدة
  * ✅ الحفاظ على نظام Anti-AdBlock
- * ✅ إصلاح مشكلة اختفاء أجزاء من الإعلان على الموبايل (Zero Clipping)
- * ✅ تصغير ذكي مع مراقبة مستمرة للتغيرات
+ * ✅ إضافة نظام تحجيم ذكي للإعلانات (Zero Clipping Solution)
  */
 
 class AdsManager {
@@ -17,7 +16,7 @@ class AdsManager {
     this.adElements = new Map();
     this.loadedScripts = new Set();
     this.popunderCount = 0;
-    this.isMobile = window.innerWidth <= 768;
+    this.adScalingObservers = new Map(); // لمراقبة وتحديد حجم الإعلانات
   }
 
   // === 1. تحميل الإعدادات ===
@@ -52,13 +51,102 @@ class AdsManager {
       await this.loadAllAds();
       console.log('🎯 تم تفعيل جميع الإعلانات بنجاح');
       
-      // 🚀 المراقبة المستمرة: تضمن أن أي إعلان يتمدد يتم تصغيره فوراً
-      setInterval(() => this.forceFitAds(), 1000);
-      window.addEventListener('resize', () => this.forceFitAds());
+      // بدء نظام مراقبة وتحديد حجم الإعلانات
+      this.startAdScalingSystem();
       
     } catch (error) {
       console.error('❌ خطأ في تحميل الإعلانات:', error);
       this.showFallbackAds();
+    }
+  }
+
+  // === نظام مراقبة وتحديد حجم الإعلانات ===
+  startAdScalingSystem() {
+    console.log('📏 بدء نظام تحجيم الإعلانات...');
+    
+    // مراقبة تغييرات DOM لضبط حجم الإعلانات الجديدة
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) { // عنصر Element
+              this.scaleAdsInElement(node);
+            }
+          });
+        }
+      });
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    
+    // فحص وتحديد حجم الإعلانات الحالية
+    setTimeout(() => this.scaleAllAds(), 1000);
+    
+    // إعادة تحديد الحجم عند تغيير حجم النافذة
+    window.addEventListener('resize', () => {
+      setTimeout(() => this.scaleAllAds(), 100);
+    });
+    
+    // فحص دوري كل 2 ثانية
+    setInterval(() => this.scaleAllAds(), 2000);
+  }
+  
+  // تحديد حجم جميع الإعلانات
+  scaleAllAds() {
+    const adWrappers = document.querySelectorAll('.ad-banner, .ad-modern-wrapper, [id^="ad-wrapper-"], [id^="banner-"], [id^="sidebar-"]');
+    adWrappers.forEach(wrapper => this.scaleAdElement(wrapper));
+  }
+  
+  // تحديد حجم الإعلانات داخل عنصر
+  scaleAdsInElement(element) {
+    const adElements = element.querySelectorAll('.ad-banner, .ad-modern-wrapper, iframe, ins, [id^="banner-"], [id^="sidebar-"]');
+    adElements.forEach(ad => this.scaleAdElement(ad));
+  }
+  
+  // تحديد حجم إعلان واحد
+  scaleAdElement(adElement) {
+    if (!adElement || !adElement.parentElement) return;
+    
+    const container = adElement.closest('[id^="ad-"], .game-container, .sidebar, .main-content') || adElement.parentElement;
+    if (!container) return;
+    
+    // الحصول على أبعاد الحاوية
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight || 300; // ارتفاع افتراضي
+    
+    // الحصول على أبعاد الإعلان الحقيقية
+    const adWidth = adElement.offsetWidth || adElement.scrollWidth;
+    const adHeight = adElement.offsetHeight || adElement.scrollHeight;
+    
+    // إذا كان الإعلان أكبر من الحاوية، نقوم بتصغيره
+    if (adWidth > containerWidth && adWidth > 0) {
+      const scale = containerWidth / adWidth;
+      const scaleValue = Math.min(scale, 1); // لا نكبر الإعلان
+      
+      // تطبيق التحجيم
+      adElement.style.transform = `scale(${scaleValue})`;
+      adElement.style.transformOrigin = 'top center';
+      adElement.style.maxWidth = '100%';
+      adElement.style.overflow = 'hidden';
+      
+      // ضبط ارتفاع الحاوية لتتناسب مع الإعلان المصغر
+      if (adElement.parentElement.classList.contains('ad-banner')) {
+        adElement.parentElement.style.height = (adHeight * scaleValue + 30) + 'px';
+        adElement.parentElement.style.overflow = 'hidden';
+      }
+      
+      console.log(`📐 تحجيم الإعلان: ${adWidth}px -> ${containerWidth}px (مقياس: ${scaleValue.toFixed(2)})`);
+    } else {
+      // إعادة تعيين إذا كان الإعلان مناسباً
+      adElement.style.transform = 'none';
+      adElement.style.maxWidth = 'none';
+      
+      if (adElement.parentElement.classList.contains('ad-banner')) {
+        adElement.parentElement.style.height = 'auto';
+      }
     }
   }
 
@@ -186,43 +274,6 @@ class AdsManager {
     } catch (error) {
       return true;
     }
-  }
-
-  // === 📏 وظيفة التصغير القسري (الحل الجذري) ===
-  forceFitAds() {
-    const wrappers = document.querySelectorAll('.ad-modern-wrapper, .ad-banner');
-    const screenWidth = window.innerWidth;
-
-    wrappers.forEach(wrapper => {
-      const scaler = wrapper.querySelector('.ad-content-scaler') || wrapper.querySelector('div[id^="banner-"], div[id^="sidebar-"]');
-      if (!scaler) return;
-
-      // ريست للحسابات
-      scaler.style.transform = 'none';
-      scaler.style.width = 'auto';
-      scaler.style.display = 'inline-block';
-
-      // قياس عرض الإعلان الحقيقي (سواء كان iframe أو div)
-      const adWidth = scaler.offsetWidth;
-      // العرض المتاح (عرض الشاشة ناقص الهوامش)
-      const availableWidth = wrapper.clientWidth - 10; 
-
-      if (adWidth > availableWidth && adWidth > 0) {
-        const scale = availableWidth / adWidth;
-        const scaleValue = Math.min(scale, 1); // لا نكبر الإعلان، فقط نصغره إذا كان كبيراً
-        
-        // تطبيق التصغير (Zoom Out)
-        scaler.style.transform = `scale(${scaleValue})`;
-        scaler.style.transformOrigin = 'center top';
-        
-        // تعديل الارتفاع القسري للحاوية لمنع الفراغات أو القص
-        const originalHeight = scaler.offsetHeight;
-        wrapper.style.height = (originalHeight * scaleValue) + 30 + "px"; 
-      } else {
-        wrapper.style.height = 'auto';
-      }
-      scaler.style.opacity = '1';
-    });
   }
 
   // === 3. حجب الصفحة عند اكتشاف AdBlock ===
@@ -584,6 +635,8 @@ class AdsManager {
     const adDiv = document.createElement('div');
     adDiv.className = 'ad-banner ad-modern-wrapper';
     adDiv.id = `ad-wrapper-${uniqueId}`;
+    adDiv.setAttribute('data-ad-id', ad.id);
+    adDiv.setAttribute('data-container', containerId);
     adDiv.innerHTML = `
       <div class="ad-label">Advertisement</div>
       <div class="ad-content-scaler" id="banner-${uniqueId}" style="text-align:center;min-height:${ad.config?.height || 90}px;background:transparent;"></div>
@@ -601,8 +654,13 @@ class AdsManager {
         
         script.onload = () => {
             console.log(`✅ تم تحميل إعلان: ${ad.id}`);
-            // تطبيق التكيف مع الشاشة بعد تحميل الإعلان
-            setTimeout(() => this.forceFitAds(), 500);
+            // تطبيق التحديد الحجم بعد تحميل الإعلان
+            setTimeout(() => {
+              const adElement = document.getElementById(`banner-${uniqueId}`);
+              if (adElement) {
+                this.scaleAdElement(adElement);
+              }
+            }, 1000);
         };
         
         script.onerror = () => {
@@ -727,6 +785,8 @@ class AdsManager {
     
     const adDiv = document.createElement('div');
     adDiv.className = 'ad-banner ad-sidebar ad-modern-wrapper';
+    adDiv.setAttribute('data-ad-id', ad.id);
+    adDiv.setAttribute('data-container', 'sidebar');
     adDiv.innerHTML = `
       <div class="ad-label">Advertisement</div>
       <div class="ad-content-scaler" id="sidebar-${uniqueId}" style="text-align:center;min-height:${ad.config?.height || 300}px;background:transparent;"></div>
@@ -744,8 +804,13 @@ class AdsManager {
         
         script.onload = () => {
             console.log(`✅ Sidebar Ad loaded: ${ad.id}`);
-            // تطبيق التكيف مع الشاشة بعد تحميل الإعلان
-            setTimeout(() => this.forceFitAds(), 500);
+            // تطبيق التحديد الحجم بعد تحميل الإعلان
+            setTimeout(() => {
+              const adElement = document.getElementById(`sidebar-${uniqueId}`);
+              if (adElement) {
+                this.scaleAdElement(adElement);
+              }
+            }, 1000);
         };
         
         script.onerror = () => {
@@ -989,12 +1054,14 @@ openSmartlinkDirect() {
       if (!container) {
         container = document.createElement('div');
         container.id = containerId;
+        container.className = 'ad-container-responsive';
         container.style.cssText = `
           min-height: 50px;
           margin: 20px 0;
           position: relative;
           background: transparent;
           overflow: hidden;
+          max-width: 100%;
         `;
         
         // تحديد مكان الإدراج
@@ -1056,12 +1123,14 @@ openSmartlinkDirect() {
       console.log(`⚠️ حاوية ${containerId} غير موجودة، إنشاء جديدة...`);
       container = document.createElement('div');
       container.id = containerId;
+      container.className = 'ad-container-responsive';
       container.style.cssText = `
         min-height: 50px;
         margin: 20px 0;
         position: relative;
         background: transparent;
         overflow: hidden;
+        max-width: 100%;
       `;
       
       // محاولة إيجاد مكان مناسب
@@ -1225,24 +1294,28 @@ document.addEventListener('DOMContentLoaded', () => {
       border: 1px solid rgba(255,255,255,0.1);
       transition: all 0.3s ease;
       min-height: 50px;
-      overflow: hidden;
-    }
-    
-    .ad-modern-wrapper {
+      overflow: hidden !important;
+      max-width: 100% !important;
+      box-sizing: border-box !important;
       display: flex !important;
       flex-direction: column !important;
       align-items: center !important;
       justify-content: center !important;
       text-align: center !important;
+    }
+    
+    .ad-modern-wrapper {
       width: 100% !important;
-      overflow: hidden !important;
+      height: auto !important;
     }
     
     .ad-content-scaler {
       display: inline-block !important;
       transition: all 0.3s ease !important;
       max-width: 100% !important;
-      transform-origin: center top !important;
+      transform-origin: top center !important;
+      overflow: hidden !important;
+      position: relative !important;
     }
     
     .ad-banner:hover {
@@ -1312,55 +1385,100 @@ document.addEventListener('DOMContentLoaded', () => {
       pointer-events: auto !important;
     }
     
-    /* منع الـ Iframes من إجبار الصفحة على التمدد */
-    iframe, ins {
+    /* إصلاحات Zero Clipping */
+    .ad-container-responsive {
+      max-width: 100vw !important;
+      overflow-x: hidden !important;
+    }
+    
+    /* إصلاحات خاصة للـ iframes والإعلانات */
+    .ad-banner iframe,
+    .ad-banner ins,
+    .ad-modern-wrapper iframe,
+    .ad-modern-wrapper ins,
+    div[id^="banner-"] iframe,
+    div[id^="sidebar-"] iframe {
       max-width: 100% !important;
-      overflow: hidden !important;
+      max-height: 100% !important;
+      transform-origin: top center !important;
       display: block !important;
+      margin: 0 auto !important;
+    }
+    
+    /* منع التمرير الأفقي على جميع الأجهزة */
+    html, body {
+      overflow-x: hidden !important;
+      max-width: 100% !important;
     }
     
     /* تحسين العرض على الأجهزة المحمولة */
     @media (max-width: 768px) {
       .ad-banner {
-        padding: 10px;
-        margin: 15px 0;
+        padding: 10px !important;
+        margin: 10px 0 !important;
+        border-radius: 6px !important;
       }
       
       .ad-sidebar {
-        position: static;
+        position: static !important;
       }
       
       .ad-content-scaler {
         transform-origin: center center !important;
       }
       
-      /* منع التمرير الأفقي على الموبايل */
-      body {
-        overflow-x: hidden !important;
+      /* تحجيم تلقائي للبانرات العريضة على الموبايل */
+      #ad-above-iframe,
+      #ad-below-iframe,
+      #ad-page-bottom {
+        padding: 8px !important;
+        margin: 8px 0 !important;
+      }
+      
+      /* ضبط أقصى عرض للإعلانات على الموبايل */
+      .ad-banner > *,
+      .ad-modern-wrapper > * {
+        max-width: calc(100vw - 20px) !important;
       }
     }
     
     @media (max-width: 480px) {
       .ad-banner {
-        padding: 8px;
-        margin: 10px 0;
+        padding: 6px !important;
+        margin: 6px 0 !important;
+        border-radius: 4px !important;
       }
       
       .ad-label {
         font-size: 8px;
         padding: 1px 4px;
       }
+      
+      /* ضبط أقصر لأحجام الإعلانات على الشاشات الصغيرة */
+      #ad-sidebar,
+      #ad-sidebar-extra {
+        min-height: 250px !important;
+      }
     }
     
-    /* إصلاح خاص للـ Zero Clipping */
-    .ad-modern-wrapper iframe,
-    .ad-modern-wrapper ins,
-    .ad-modern-wrapper div[id^="banner-"],
-    .ad-modern-wrapper div[id^="sidebar-"] {
-      max-width: 100vw !important;
+    /* أنماط التحجيم الذكي */
+    .ad-scaled {
+      transition: transform 0.3s ease !important;
+    }
+    
+    /* منع التمرير الأفقي داخل الإعلانات */
+    .ad-banner * {
+      max-width: 100% !important;
       box-sizing: border-box !important;
-      display: block !important;
-      margin: 0 auto !important;
+    }
+    
+    /* إصلاح خاص لشركات الإعلانات الشائعة */
+    ins.adsbygoogle,
+    iframe[src*="ads"],
+    div[id*="ad"],
+    div[class*="ad"] {
+      max-width: 100% !important;
+      overflow: hidden !important;
     }
   `;
   document.head.appendChild(style);
