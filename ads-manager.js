@@ -737,36 +737,62 @@ class AdsManager {
     }, this.config.socialBar.delay || 5000);
   }
 
-// === 13. تحميل Popunder - مُصلح ✅ (يظهر عند أول نقرة فقط) ===
+// === 13. تحميل Popunder - إصلاح نهائي 🔥 ===
   loadPopunder() {
-    if (!this.config.popunder?.enabled) return;
+    if (!this.config.popunder?.enabled) {
+      console.log('⚠️ Popunder disabled in config');
+      return;
+    }
     
     const frequency = this.config.popunder.frequency;
     const maxPerSession = this.config.popunder.maxPerSession || 1;
     
-    // التحقق من عدد المرات المسموح بها
+    // 🔒 فحص قوي: هل تم تنفيذ Popunder من قبل؟
+    if (this.popunderExecuted) {
+      console.log('🚫 Popunder already executed in this instance');
+      return;
+    }
+    
+    // التحقق من الجلسة
     if (frequency === 'once_per_session') {
       const currentCount = this.sessionData.popunderCount || 0;
       
       if (currentCount >= maxPerSession) {
-        console.log(`⚠️ Popunder limit reached: ${currentCount}/${maxPerSession}`);
+        console.log(`🚫 Popunder limit reached: ${currentCount}/${maxPerSession}`);
+        return;
+      }
+      
+      if (this.sessionData.popunderShown) {
+        console.log('🚫 Popunder already shown in this session');
         return;
       }
     }
     
-    // 🔥 الحل: تحميل Popunder عند أول نقرة فقط
-    let popunderTriggered = false;
+    // 🔥 منع إضافة المستمع أكثر من مرة
+    if (this.clickHandlerAdded) {
+      console.log('⚠️ Click handler already added');
+      return;
+    }
     
-    const triggerPopunder = () => {
-      if (popunderTriggered) return; // منع التكرار
-      popunderTriggered = true;
+    this.clickHandlerAdded = true;
+    
+    // دالة تنفيذ Popunder
+    const triggerPopunder = (event) => {
+      // 🔒 فحص مضاعف للتأكد من عدم التكرار
+      if (this.popunderExecuted) {
+        console.log('🚫 Popunder already executed - Ignoring click');
+        return;
+      }
       
-      console.log('🎯 First click detected - Loading Popunder...');
+      // وضع علامة فورية لمنع التنفيذ المتعدد
+      this.popunderExecuted = true;
       
+      console.log('🎯 First click detected - Triggering Popunder...');
+      
+      // تحميل السكريبتات
       this.config.popunder.scripts.forEach((scriptUrl, index) => {
-        // التحقق من عدم تحميل السكريبت مسبقاً
         if (this.loadedScripts.has(scriptUrl)) {
-          console.log(`⚠️ Popunder script already loaded: ${scriptUrl}`);
+          console.log(`⚠️ Script already loaded: ${scriptUrl}`);
           return;
         }
         
@@ -774,31 +800,64 @@ class AdsManager {
         script.src = scriptUrl;
         script.async = true;
         script.setAttribute('data-cfasync', 'false');
-        script.id = `popunder-script-${index}`;
+        script.id = `popunder-script-${index}-${Date.now()}`;
+        
+        script.onload = () => {
+          console.log(`✅ Popunder script loaded: ${scriptUrl}`);
+        };
+        
+        script.onerror = () => {
+          console.error(`❌ Failed to load: ${scriptUrl}`);
+        };
         
         document.body.appendChild(script);
         this.loadedScripts.add(scriptUrl);
-        
-        console.log(`✅ Popunder script loaded: ${scriptUrl}`);
       });
       
-      // تحديث العداد
+      // تحديث بيانات الجلسة
       this.sessionData.popunderCount = (this.sessionData.popunderCount || 0) + 1;
       this.sessionData.popunderShown = true;
+      this.sessionData.lastPopunderTime = Date.now();
       this.saveSessionData();
       
-      console.log(`📊 Popunder triggered: ${this.sessionData.popunderCount}/${maxPerSession}`);
+      console.log(`✅ Popunder triggered: ${this.sessionData.popunderCount}/${maxPerSession}`);
       
-      // إزالة المستمعات بعد التنفيذ
-      document.removeEventListener('click', triggerPopunder);
-      document.removeEventListener('touchstart', triggerPopunder);
+      // إزالة جميع المستمعات فوراً
+      document.removeEventListener('click', triggerPopunder, true);
+      document.removeEventListener('touchstart', triggerPopunder, true);
+      document.removeEventListener('mousedown', triggerPopunder, true);
+      
+      console.log('🔒 All popunder listeners removed');
     };
     
-    // إضافة مستمعات للنقر
-    document.addEventListener('click', triggerPopunder, { once: true });
-    document.addEventListener('touchstart', triggerPopunder, { once: true });
+    // إضافة المستمعات مع useCapture=true لاصطياد الحدث مبكراً
+    document.addEventListener('click', triggerPopunder, { capture: true, once: true });
+    document.addEventListener('touchstart', triggerPopunder, { capture: true, once: true });
     
-    console.log('👆 Popunder ready - Waiting for first user click...');
+    console.log('👆 Popunder armed - Waiting for first user interaction...');
+    
+    // حماية إضافية: حظر window.open المتعددة
+    this.protectAgainstMultiplePopunders();
+  }
+  
+  // === حماية ضد فتح نوافذ متعددة ===
+  protectAgainstMultiplePopunders() {
+    const originalWindowOpen = window.open;
+    let popunderOpenCount = 0;
+    const maxPopunderWindows = 1;
+    
+    window.open = function(...args) {
+      // السماح بفتح نافذة واحدة فقط من Popunder
+      if (popunderOpenCount >= maxPopunderWindows) {
+        console.log('🚫 Blocked additional popunder window');
+        return null;
+      }
+      
+      popunderOpenCount++;
+      console.log(`📊 Popunder window opened: ${popunderOpenCount}/${maxPopunderWindows}`);
+      
+      return originalWindowOpen.apply(this, args);
+    };
   }
   // === 14. تحميل Smartlink - مُصلح ✅ ===
   loadSmartlink() {
