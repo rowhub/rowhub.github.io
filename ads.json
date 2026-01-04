@@ -23,7 +23,7 @@
   },
   
   "nativeBanner": {
-    "enabled": true,
+    "enabled": false,
     "script": "https://pl28343658.effectivegatecpm.com/576ef3ebcc3bae2383642673940c2ab2/invoke.js",
     "html": "<div id='container-576ef3ebcc3bae2383642673940c2ab2'></div>"
   },
