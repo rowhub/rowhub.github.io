@@ -1185,206 +1185,201 @@ document.addEventListener('DOMContentLoaded', () => {
   window.adsManager = adsManager;
   
   // إضافة أنماط CSS محسنة
- .ad-banner {
-  background: rgba(0,0,0,0.7);
-  border-radius: 8px;
-  padding: 15px;
-  margin: 20px auto;
-  position: relative;
-  backdrop-filter: blur(5px);
-  border: 1px solid rgba(255,255,255,0.1);
-  transition: all 0.3s ease;
-  min-height: 50px;
-  max-width: 100%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.ad-banner:hover {
-  border-color: rgba(255,255,255,0.3);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-}
-
-.ad-banner > div {
-  max-width: 100%;
-  overflow: hidden;
-}
-
-.ad-banner iframe {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block;
-  margin: 0 auto;
-}
-
-.ad-label {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.6);
-  font-size: 10px;
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-weight: bold;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  z-index: 10;
-}
-
-.ad-sidebar {
-  position: sticky;
-  top: 100px;
-  margin-bottom: 20px;
-}
-
-.native-ad-banner {
-  background: linear-gradient(135deg, rgba(26,42,108,0.8), rgba(178,31,31,0.8));
-}
-
-#ad-above-iframe,
-#ad-below-iframe,
-#ad-page-bottom,
-#ad-page-middle {
-  width: 100%;
-  max-width: 100%;
-  overflow: hidden;
-}
-
-#ad-above-iframe {
-  margin-bottom: 15px;
-}
-
-#ad-below-iframe {
-  margin-top: 15px;
-  margin-bottom: 25px;
-}
-
-#ad-page-bottom {
-  margin-top: 30px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-#ad-page-middle {
-  margin: 25px auto;
-  text-align: center;
-}
-
-#ad-sidebar-extra {
-  margin-top: 20px;
-}
-
-body.adblock-blocked > *:not(#adblock-block-overlay) {
-  pointer-events: none !important;
-  opacity: 0.3;
-  filter: blur(2px);
-}
-
-#adblock-block-overlay,
-#adblock-block-overlay * {
-  filter: none !important;
-  opacity: 1 !important;
-  pointer-events: auto !important;
-}
-
-/* تحسين العرض على الشاشات المتوسطة */
-@media (max-width: 1024px) {
+const style = document.createElement('style');
+style.textContent = `
   .ad-banner {
-    padding: 12px;
-    margin: 15px auto;
-  }
-  
-  .ad-banner iframe {
-    transform: scale(0.9);
-    transform-origin: center;
-  }
-}
-
-/* تحسين العرض على التابلت */
-@media (max-width: 768px) {
-  .ad-banner {
-    padding: 10px;
-    margin: 15px auto;
-    max-width: 95%;
-  }
-  
-  .ad-banner iframe {
-    transform: scale(0.75);
-    transform-origin: center;
-  }
-  
-  .ad-sidebar {
-    position: static;
+    background: rgba(0,0,0,0.7);
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px auto;
+    position: relative;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255,255,255,0.1);
+    transition: all 0.3s ease;
+    min-height: 50px;
     max-width: 100%;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
-  
+
+  .ad-banner:hover {
+    border-color: rgba(255,255,255,0.3);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  }
+
+  .ad-banner > div {
+    max-width: 100%;
+    overflow: hidden;
+  }
+
+  .ad-banner iframe {
+    max-width: 100% !important;
+    height: auto !important;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .ad-label {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(255,255,255,0.1);
+    color: rgba(255,255,255,0.6);
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    z-index: 10;
+  }
+
+  .ad-sidebar {
+    position: sticky;
+    top: 100px;
+    margin-bottom: 20px;
+  }
+
+  .native-ad-banner {
+    background: linear-gradient(135deg, rgba(26,42,108,0.8), rgba(178,31,31,0.8));
+  }
+
   #ad-above-iframe,
   #ad-below-iframe,
+  #ad-page-bottom,
   #ad-page-middle {
-    padding: 5px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
   }
-}
 
-/* تحسين العرض على الهواتف */
-@media (max-width: 480px) {
-  .ad-banner {
-    padding: 8px;
-    margin: 10px auto;
-    max-width: 98%;
+  #ad-above-iframe {
+    margin-bottom: 15px;
   }
-  
-  .ad-banner iframe {
-    transform: scale(0.6);
-    transform-origin: center;
-    max-height: 80px;
+
+  #ad-below-iframe {
+    margin-top: 15px;
+    margin-bottom: 25px;
   }
-  
-  .ad-label {
-    font-size: 8px;
-    padding: 1px 4px;
+
+  #ad-page-bottom {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    text-align: center;
   }
-  
-  #ad-sidebar,
+
+  #ad-page-middle {
+    margin: 25px auto;
+    text-align: center;
+  }
+
   #ad-sidebar-extra {
-    max-width: 100%;
-    margin: 10px auto;
+    margin-top: 20px;
   }
-}
 
-/* تحسين العرض على الهواتف الصغيرة جداً */
-@media (max-width: 360px) {
-  .ad-banner {
-    padding: 5px;
-    margin: 8px auto;
+  body.adblock-blocked > *:not(#adblock-block-overlay) {
+    pointer-events: none !important;
+    opacity: 0.3;
+    filter: blur(2px);
   }
-  
-  .ad-banner iframe {
-    transform: scale(0.5);
-    max-height: 60px;
-  }
-}
 
-/* إخفاء الإعلانات الكبيرة على الشاشات الصغيرة */
-@media (max-width: 640px) {
-  .ad-banner iframe[width="728"],
-  .ad-banner iframe[width="468"] {
-    transform: scale(0.45);
-    transform-origin: top center;
+  #adblock-block-overlay,
+  #adblock-block-overlay * {
+    filter: none !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
   }
-}
 
-/* تحسين الـ Sidebar على الأجهزة المحمولة */
-@media (max-width: 992px) {
-  .sidebar .ad-banner {
-    max-width: 100%;
-    margin: 10px auto;
+  @media (max-width: 1024px) {
+    .ad-banner {
+      padding: 12px;
+      margin: 15px auto;
+    }
+    
+    .ad-banner iframe {
+      transform: scale(0.9);
+      transform-origin: center;
+    }
   }
-}
-  `;
-  document.head.appendChild(style);
-  
-  console.log('🎨 تم تحميل أنماط الإعلانات');
-});
+
+  @media (max-width: 768px) {
+    .ad-banner {
+      padding: 10px;
+      margin: 15px auto;
+      max-width: 95%;
+    }
+    
+    .ad-banner iframe {
+      transform: scale(0.75);
+      transform-origin: center;
+    }
+    
+    .ad-sidebar {
+      position: static;
+      max-width: 100%;
+    }
+    
+    #ad-above-iframe,
+    #ad-below-iframe,
+    #ad-page-middle {
+      padding: 5px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .ad-banner {
+      padding: 8px;
+      margin: 10px auto;
+      max-width: 98%;
+    }
+    
+    .ad-banner iframe {
+      transform: scale(0.6);
+      transform-origin: center;
+      max-height: 80px;
+    }
+    
+    .ad-label {
+      font-size: 8px;
+      padding: 1px 4px;
+    }
+    
+    #ad-sidebar,
+    #ad-sidebar-extra {
+      max-width: 100%;
+      margin: 10px auto;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .ad-banner {
+      padding: 5px;
+      margin: 8px auto;
+    }
+    
+    .ad-banner iframe {
+      transform: scale(0.5);
+      max-height: 60px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ad-banner iframe[width="728"],
+    .ad-banner iframe[width="468"] {
+      transform: scale(0.45);
+      transform-origin: top center;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .sidebar .ad-banner {
+      max-width: 100%;
+      margin: 10px auto;
+    }
+  }
+`;
+document.head.appendChild(style);
+
+console.log('🎨 تم تحميل أنماط الإعلانات');
