@@ -1434,6 +1434,189 @@ document.addEventListener('DOMContentLoaded', () => {
       z-index: -1;
       background: rgba(0,0,0,0.5);
     }
+    /* === الحل النهائي لمشاكل الإعلانات المتجاوزة للحدود === */
+/* إجبار جميع عناصر الإعلانات على البقاء ضمن حدودها */
+[id*="ad-"],
+.ad-banner,
+.ad-banner *,
+.ad-banner iframe,
+.ad-banner div,
+.ad-banner span,
+.ad-banner img {
+    max-width: 100% !important;
+    width: auto !important;
+    height: auto !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    display: block !important;
+}
+
+/* حل خاص للإطارات الداخلية */
+iframe[width][height] {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* حلول استباقية لمشاكل محددة */
+[id*="728x90"] iframe,
+iframe[width="728"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 90px !important;
+}
+
+[id*="468x60"] iframe,
+iframe[width="468"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 60px !important;
+}
+
+[id*="300x250"] iframe,
+iframe[width="300"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 250px !important;
+}
+
+[id*="320x50"] iframe,
+iframe[width="320"] {
+    max-width: 100% !important;
+    width: 100% !important;
+    height: 50px !important;
+}
+
+[id*="160x"] iframe,
+iframe[width="160"] {
+    max-width: 100% !important;
+    width: 100% !important;
+}
+
+/* إصلاحات للشاشات الصغيرة */
+@media (max-width: 768px) {
+    /* إعادة ضبط جميع الإعلانات على الشاشات الصغيرة */
+    .ad-banner,
+    .ad-banner iframe,
+    .ad-banner div {
+        max-width: 100% !important;
+        width: 100% !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 auto !important;
+        float: none !important;
+        position: static !important;
+    }
+    
+    /* حلول لحاويات محددة */
+    #ad-above-iframe,
+    #ad-below-iframe,
+    #ad-page-bottom,
+    #ad-page-middle,
+    #ad-sidebar,
+    #ad-sidebar-extra {
+        overflow: hidden !important;
+        display: block !important;
+        position: relative !important;
+        max-width: 100% !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 10px 0 !important;
+    }
+}
+
+/* إصلاحات للهواتف الصغيرة جداً */
+@media (max-width: 480px) {
+    .ad-banner {
+        transform: none !important;
+        zoom: 1 !important;
+        -moz-transform: none !important;
+        -webkit-transform: none !important;
+    }
+    
+    /* إخفاء الإعلانات التي تسبب مشاكل على الشاشات الصغيرة */
+    iframe[width="728"][height="90"] {
+        width: 100% !important;
+        height: 70px !important;
+        transform: scale(0.85) !important;
+        transform-origin: center top !important;
+    }
+    
+    iframe[width="468"][height="60"] {
+        width: 100% !important;
+        height: 50px !important;
+        transform: scale(0.9) !important;
+        transform-origin: center top !important;
+    }
+    
+    iframe[width="300"][height="250"] {
+        width: 280px !important;
+        height: 230px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+}
+
+/* حماية من القص الزائد */
+.ad-banner {
+    clip-path: inset(0 round 8px) !important;
+    -webkit-clip-path: inset(0 round 8px) !important;
+}
+
+/* حلول لـ overflow افقية */
+html, body {
+    overflow-x: hidden !important;
+    max-width: 100% !important;
+}
+
+.container {
+    overflow-x: hidden !important;
+}
+
+/* دعم لجميع المتصفحات */
+@supports (-webkit-overflow-scrolling: touch) {
+    /* للأجهزة التي تدعم اللمس */
+    .ad-banner iframe {
+        -webkit-overflow-scrolling: touch !important;
+        overflow: scroll !important;
+        -webkit-transform: translateZ(0) !important;
+    }
+}
+
+/* حل خاص للمتصفحات القديمة */
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    .ad-banner iframe {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+}
+
+/* تحسينات لأداء أفضل */
+.ad-banner {
+    will-change: transform;
+    contain: layout style paint;
+}
+
+/* إضافة حدود ظاهرة للإعلانات خلال التطوير */
+/* قم بإزالة هذا الجزء بعد التأكد من الحل */
+.ad-banner.debug {
+    border: 2px solid red !important;
+    background: rgba(255,0,0,0.1) !important;
+}
+
+.ad-banner.debug::after {
+    content: "Ad Container";
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    background: red;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    z-index: 9999;
+}
   `;
   document.head.appendChild(style);
   
