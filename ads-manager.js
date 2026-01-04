@@ -19,8 +19,6 @@ class AdsManager {
     this.adScalingObservers = new Map(); // لمراقبة وتحديد حجم الإعلانات
   }
 
-
-
   // === 1. تحميل الإعدادات ===
   async init() {
     try {
@@ -52,10 +50,9 @@ class AdsManager {
       // تحميل جميع الإعلانات
       await this.loadAllAds();
       console.log('🎯 تم تفعيل جميع الإعلانات بنجاح');
-            this.startAdScalingSystem();
       
       // بدء نظام مراقبة وتحديد حجم الإعلانات
-            this.startAdScalingSystem();
+      this.startAdScalingSystem();
       
     } catch (error) {
       console.error('❌ خطأ في تحميل الإعلانات:', error);
@@ -97,7 +94,80 @@ class AdsManager {
     setInterval(() => this.scaleAllAds(), 2000);
   }
   
+  // تحديد حجم جميع الإعلانات
+  scaleAllAds() {
+    const adWrappers = document.querySelectorAll('.ad-banner, .ad-modern-wrapper, [id^="ad-wrapper-"], [id^="banner-"], [id^="sidebar-"]');
+    adWrappers.forEach(wrapper => this.scaleAdElement(wrapper));
+  }
   
+  // تحديد حجم الإعلانات داخل عنصر
+  scaleAdsInElement(element) {
+    const adElements = element.querySelectorAll('.ad-banner, .ad-modern-wrapper, iframe, ins, [id^="banner-"], [id^="sidebar-"]');
+    adElements.forEach(ad => this.scaleAdElement(ad));
+  }
+  
+  // تحديد حجم إعلان واحد - نسخة محسنة جداً ✅
+  scaleAdElement(adElement) {
+    if (!adElement || !adElement.parentElement) return;
+    
+    const banner = adElement.closest('.ad-banner, .ad-modern-wrapper');
+    if (!banner) return;
+    
+    // الحصول على أبعاد البانر (الحاوية الرئيسية)
+    const bannerWidth = banner.clientWidth;
+    const bannerPadding = 30; // مساحة للـ padding والـ label
+    const availableWidth = bannerWidth - bannerPadding;
+    
+    // البحث عن جميع عناصر الإعلان الداخلية (iframe, ins, div)
+    const adContent = adElement.querySelector('iframe, ins, div[id*="container"]') || adElement;
+    
+    // انتظار تحميل الإعلان الكامل
+    setTimeout(() => {
+      const actualAdWidth = adContent.scrollWidth || adContent.offsetWidth;
+      const actualAdHeight = adContent.scrollHeight || adContent.offsetHeight;
+      
+      if (actualAdWidth > availableWidth && actualAdWidth > 0) {
+        // حساب نسبة التحجيم المطلوبة
+        const scaleRatio = availableWidth / actualAdWidth;
+        const finalScale = Math.min(scaleRatio, 1);
+        
+        // تطبيق التحجيم على العنصر الداخلي
+        adContent.style.cssText += `
+          transform: scale(${finalScale}) !important;
+          transform-origin: top center !important;
+          margin: 0 auto !important;
+          display: block !important;
+        `;
+        
+        // ضبط ارتفاع البانر بناءً على الإعلان المُحجّم
+        const scaledHeight = actualAdHeight * finalScale;
+        banner.style.minHeight = (scaledHeight + bannerPadding) + 'px';
+        
+        // إزالة overflow: hidden من البانر لتجنب القص
+        banner.style.overflow = 'visible';
+        adElement.style.overflow = 'visible';
+        
+        console.log(`📐 تحجيم ذكي: ${actualAdWidth}px → ${availableWidth}px (${(finalScale * 100).toFixed(1)}%)`);
+      } else {
+        // الإعلان مناسب، لا حاجة للتحجيم
+        adContent.style.transform = 'none';
+        banner.style.minHeight = 'auto';
+      }
+    }, 500);
+    
+    // فحص إضافي بعد ثانية للتأكد (بعض الإعلانات تحتاج وقت)
+    setTimeout(() => {
+      const finalAdWidth = adContent.scrollWidth || adContent.offsetWidth;
+      if (finalAdWidth > availableWidth && finalAdWidth > 0) {
+        const scaleRatio = availableWidth / finalAdWidth;
+        const finalScale = Math.min(scaleRatio, 1);
+        
+        adContent.style.transform = `scale(${finalScale}) !important`;
+        console.log(`🔄 إعادة تحجيم: ${(finalScale * 100).toFixed(1)}%`);
+      }
+    }, 1500);
+  }
+
   // === 2. كشف AdBlock بشكل فعال ===
   async detectAdBlockEffectively() {
     console.log('🔍 بدء كشف AdBlock...');
@@ -600,15 +670,17 @@ class AdsManager {
         script.setAttribute('data-cfasync', 'false');
         script.id = `script-${uniqueId}`;
         
-                script.onload = () => {
+        script.onload = () => {
             console.log(`✅ تم تحميل إعلان: ${ad.id}`);
+            // تطبيق التحديد الحجم بعد تحميل الإعلان
             setTimeout(() => {
               const adElement = document.getElementById(`banner-${uniqueId}`);
-              if (adElement) this.scaleAdElement(adElement);
+              if (adElement) {
+                this.scaleAdElement(adElement);
+              }
             }, 1000);
         };
-            // تطبيق التحديد الحجم بعد تحميل الإعلان
-
+        
         script.onerror = () => {
             console.warn(`⚠️ فشل تحميل إعلان: ${ad.id}`);
             this.showFallbackInContainer(container);
@@ -748,16 +820,17 @@ class AdsManager {
         script.setAttribute('data-cfasync', 'false');
         script.id = `sidebar-script-${uniqueId}`;
         
-                script.onload = () => {
+        script.onload = () => {
             console.log(`✅ Sidebar Ad loaded: ${ad.id}`);
+            // تطبيق التحديد الحجم بعد تحميل الإعلان
             setTimeout(() => {
               const adElement = document.getElementById(`sidebar-${uniqueId}`);
-              if (adElement) this.scaleAdElement(adElement);
+              if (adElement) {
+                this.scaleAdElement(adElement);
+              }
             }, 1000);
         };
-            // تطبيق التحديد الحجم بعد تحميل الإعلان
-            
-    
+        
         script.onerror = () => {
             console.warn(`⚠️ فشل تحميل Sidebar Ad: ${ad.id}`);
             this.showFallbackInContainer(container);
@@ -1334,41 +1407,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .ad-container-responsive {
       max-width: 100vw !important;
       overflow-x: hidden !important;
-    }
-
-        /* === حل نهائي للإعلانات الكبيرة على الموبايل === */
-    .ad-banner iframe,
-    .ad-banner ins,
-    .ad-modern-wrapper iframe,
-    .ad-modern-wrapper ins,
-    div[id^="banner-"] iframe,
-    div[id^="sidebar-"] iframe {
-      max-width: 100% !important;
-      max-height: 100% !important;
-      transform-origin: top center !important;
-      display: block !important;
-      margin: 0 auto !important;
-      transform: scale(0.95) !important;
-    }
-
-    @media (max-width: 768px) {
-      .ad-banner iframe,
-      .ad-banner ins {
-        transform: scale(0.9) !important;
-        transform-origin: center center !important;
-      }
-      
-      html, body {
-        overflow-x: hidden !important;
-        position: relative;
-        width: 100%;
-      }
-    }
-
-    ins.adsbygoogle[data-ad-status="unfilled"],
-    ins.adsbygoogle iframe {
-      max-width: 100% !important;
-      width: 100% !important;
     }
     
     /* إصلاحات خاصة للـ iframes والإعلانات */
