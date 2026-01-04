@@ -20,139 +20,270 @@ class AdsManager {
   }
 
   // === نظام تحجيم الإعلانات الذكي المحسّن ===
-scaleAdElement(adElement) {
-  if (!adElement || !adElement.parentElement) return;
-  
-  const container = adElement.closest('[id^="ad-"]') || adElement.parentElement;
-  if (!container) return;
-  
-  // الحصول على أبعاد الحاوية الفعلية
-  const containerWidth = container.clientWidth || container.offsetWidth;
-  const containerHeight = container.clientHeight || container.offsetHeight;
-  
-  if (containerWidth <= 0 || containerHeight <= 0) {
-    console.warn(`📏 الحاوية فارغة: ${container.id}`);
-    return;
-  }
-  
-  // محاولة الحصول على أبعاد الإعلان بطرق مختلفة
-  let adWidth = 0;
-  let adHeight = 0;
-  
-  if (adElement.tagName === 'IFRAME') {
-    // التعامل مع الإطارات الداخلية
-    try {
-      const iframeDoc = adElement.contentDocument || adElement.contentWindow.document;
-      const iframeBody = iframeDoc.body;
-      if (iframeBody) {
-        adWidth = iframeBody.scrollWidth || iframeBody.offsetWidth;
-        adHeight = iframeBody.scrollHeight || iframeBody.offsetHeight;
+  scaleAdElement(adElement) {
+    if (!adElement || !adElement.parentElement) return;
+    
+    const container = adElement.closest('[id^="ad-"]') || adElement.parentElement;
+    if (!container) return;
+    
+    // الحصول على أبعاد الحاوية الفعلية
+    const containerWidth = container.clientWidth || container.offsetWidth;
+    const containerHeight = container.clientHeight || container.offsetHeight;
+    
+    if (containerWidth <= 0 || containerHeight <= 0) {
+      console.warn(`📏 الحاوية فارغة: ${container.id}`);
+      return;
+    }
+    
+    // محاولة الحصول على أبعاد الإعلان بطرق مختلفة
+    let adWidth = 0;
+    let adHeight = 0;
+    
+    if (adElement.tagName === 'IFRAME') {
+      // التعامل مع الإطارات الداخلية
+      try {
+        const iframeDoc = adElement.contentDocument || adElement.contentWindow.document;
+        const iframeBody = iframeDoc.body;
+        if (iframeBody) {
+          adWidth = iframeBody.scrollWidth || iframeBody.offsetWidth;
+          adHeight = iframeBody.scrollHeight || iframeBody.offsetHeight;
+        }
+      } catch (e) {
+        // إذا فشل الوصول إلى محتوى iframe
+        adWidth = adElement.offsetWidth || adElement.scrollWidth;
+        adHeight = adElement.offsetHeight || adElement.scrollHeight;
       }
-    } catch (e) {
-      // إذا فشل الوصول إلى محتوى iframe
-      adWidth = adElement.offsetWidth || adElement.scrollWidth;
-      adHeight = adElement.offsetHeight || adElement.scrollHeight;
+    } else {
+      // للعناصر العادية
+      adWidth = adElement.scrollWidth || adElement.offsetWidth;
+      adHeight = adElement.scrollHeight || adElement.offsetHeight;
     }
-  } else {
-    // للعناصر العادية
-    adWidth = adElement.scrollWidth || adElement.offsetWidth;
-    adHeight = adElement.scrollHeight || adElement.offsetHeight;
-  }
-  
-  // إذا لم نتمكن من الحصول على الأبعاد
-  if (adWidth <= 0) {
-    adWidth = adElement.getAttribute('width') || adElement.style.width;
-    if (adWidth && typeof adWidth === 'string') {
-      adWidth = parseInt(adWidth.replace('px', ''));
+    
+    // إذا لم نتمكن من الحصول على الأبعاد
+    if (adWidth <= 0) {
+      adWidth = adElement.getAttribute('width') || adElement.style.width;
+      if (adWidth && typeof adWidth === 'string') {
+        adWidth = parseInt(adWidth.replace('px', ''));
+      }
     }
-  }
-  
-  // تطبيق التحجيم الذكي
-  if (adWidth > containerWidth && containerWidth > 0) {
-    // حساب نسبة التحجيم بناءً على العرض والارتفاع
-    const widthScale = containerWidth / adWidth;
-    const heightScale = containerHeight / adHeight;
-    const scale = Math.min(widthScale, heightScale, 0.95); // لا تتجاوز 95%
     
-    // تطبيق التحجيم مع الحفاظ على التناسب
-    adElement.style.transform = `scale(${scale})`;
-    adElement.style.transformOrigin = 'top left';
-    adElement.style.maxWidth = `${containerWidth}px`;
-    adElement.style.maxHeight = `${containerHeight}px`;
-    adElement.style.overflow = 'hidden';
-    adElement.style.display = 'block';
-    adElement.style.margin = '0 auto';
-    
-    // إضافة فئة للتتبع
-    adElement.classList.add('ad-scaled');
-    
-    console.log(`📐 تحجيم الإعلان: ${adWidth}x${adHeight} -> ${containerWidth}x${containerHeight} (مقياس: ${scale.toFixed(2)})`);
-    
-    // إعادة حساب بعد التحجيم للتأكد
-    setTimeout(() => {
-      const scaledWidth = adElement.offsetWidth;
-      const scaledHeight = adElement.offsetHeight;
+    // تطبيق التحجيم الذكي
+    if (adWidth > containerWidth && containerWidth > 0) {
+      // حساب نسبة التحجيم بناءً على العرض والارتفاع
+      const widthScale = containerWidth / adWidth;
+      const heightScale = containerHeight / adHeight;
+      const scale = Math.min(widthScale, heightScale, 0.95); // لا تتجاوز 95%
       
-      if (scaledWidth > containerWidth || scaledHeight > containerHeight) {
-        // إذا كان لا يزال كبيراً، تطبيق تحجيم إضافي
-        const extraScale = Math.min(
-          containerWidth / scaledWidth,
-          containerHeight / scaledHeight,
-          0.9
-        );
-        adElement.style.transform = `scale(${extraScale})`;
-        console.log(`🔧 تطبيق تحجيم إضافي: ${extraScale.toFixed(2)}`);
-      }
-    }, 500);
-  } else if (adWidth > 0 && containerWidth > 0) {
-    // الإعلان يتناسب مع الحاوية
-    adElement.style.maxWidth = '100%';
-    adElement.style.maxHeight = '100%';
-    adElement.style.overflow = 'hidden';
+      // تطبيق التحجيم مع الحفاظ على التناسب
+      adElement.style.transform = `scale(${scale})`;
+      adElement.style.transformOrigin = 'top left';
+      adElement.style.maxWidth = `${containerWidth}px`;
+      adElement.style.maxHeight = `${containerHeight}px`;
+      adElement.style.overflow = 'hidden';
+      adElement.style.display = 'block';
+      adElement.style.margin = '0 auto';
+      
+      // إضافة فئة للتتبع
+      adElement.classList.add('ad-scaled');
+      
+      console.log(`📐 تحجيم الإعلان: ${adWidth}x${adHeight} -> ${containerWidth}x${containerHeight} (مقياس: ${scale.toFixed(2)})`);
+      
+      // إعادة حساب بعد التحجيم للتأكد
+      setTimeout(() => {
+        const scaledWidth = adElement.offsetWidth;
+        const scaledHeight = adElement.offsetHeight;
+        
+        if (scaledWidth > containerWidth || scaledHeight > containerHeight) {
+          // إذا كان لا يزال كبيراً، تطبيق تحجيم إضافي
+          const extraScale = Math.min(
+            containerWidth / scaledWidth,
+            containerHeight / scaledHeight,
+            0.9
+          );
+          adElement.style.transform = `scale(${extraScale})`;
+          console.log(`🔧 تطبيق تحجيم إضافي: ${extraScale.toFixed(2)}`);
+        }
+      }, 500);
+    } else if (adWidth > 0 && containerWidth > 0) {
+      // الإعلان يتناسب مع الحاوية
+      adElement.style.maxWidth = '100%';
+      adElement.style.maxHeight = '100%';
+      adElement.style.overflow = 'hidden';
+    }
   }
-}
 
-// إضافة هذه الدالة الجديدة للتحقق من الإعلانات المحددة
-checkAndFixSpecificAds() {
-  // إعلانات الـ 300x250
-  const squareAds = document.querySelectorAll('[id*="300x250"], [style*="300px"], [height="250"]');
-  squareAds.forEach(ad => {
-    const container = ad.closest('.ad-banner, [id^="ad-"]');
-    if (container) {
-      const containerWidth = container.clientWidth;
-      if (containerWidth < 300) {
-        ad.style.transform = `scale(${containerWidth / 300})`;
-        ad.style.transformOrigin = 'top left';
+  // === التحقق من الإعلانات المحددة ===
+  checkAndFixSpecificAds() {
+    // إعلانات الـ 300x250
+    const squareAds = document.querySelectorAll('[id*="300x250"], [style*="300px"], [height="250"]');
+    squareAds.forEach(ad => {
+      const container = ad.closest('.ad-banner, [id^="ad-"]');
+      if (container) {
+        const containerWidth = container.clientWidth;
+        if (containerWidth < 300) {
+          ad.style.transform = `scale(${containerWidth / 300})`;
+          ad.style.transformOrigin = 'top left';
+        }
       }
-    }
-  });
-  
-  // إعلانات الـ 728x90
-  const wideAds = document.querySelectorAll('[id*="728x90"], [width="728"], [style*="728px"]');
-  wideAds.forEach(ad => {
-    const container = ad.closest('.ad-banner, [id^="ad-"]');
-    if (container) {
-      const containerWidth = container.clientWidth;
-      if (containerWidth < 728) {
-        ad.style.transform = `scale(${containerWidth / 728})`;
-        ad.style.transformOrigin = 'top left';
+    });
+    
+    // إعلانات الـ 728x90
+    const wideAds = document.querySelectorAll('[id*="728x90"], [width="728"], [style*="728px"]');
+    wideAds.forEach(ad => {
+      const container = ad.closest('.ad-banner, [id^="ad-"]');
+      if (container) {
+        const containerWidth = container.clientWidth;
+        if (containerWidth < 728) {
+          ad.style.transform = `scale(${containerWidth / 728})`;
+          ad.style.transformOrigin = 'top left';
+        }
       }
-    }
-  });
-  
-  // إعلانات الـ 468x60
-  const mediumAds = document.querySelectorAll('[id*="468x60"], [width="468"], [style*="468px"]');
-  mediumAds.forEach(ad => {
-    const container = ad.closest('.ad-banner, [id^="ad-"]');
-    if (container) {
-      const containerWidth = container.clientWidth;
-      if (containerWidth < 468) {
-        ad.style.transform = `scale(${containerWidth / 468})`;
-        ad.style.transformOrigin = 'top left';
+    });
+    
+    // إعلانات الـ 468x60
+    const mediumAds = document.querySelectorAll('[id*="468x60"], [width="468"], [style*="468px"]');
+    mediumAds.forEach(ad => {
+      const container = ad.closest('.ad-banner, [id^="ad-"]');
+      if (container) {
+        const containerWidth = container.clientWidth;
+        if (containerWidth < 468) {
+          ad.style.transform = `scale(${containerWidth / 468})`;
+          ad.style.transformOrigin = 'top left';
+        }
       }
+    });
+  }
+
+  scaleAllAds() {
+    // التحقق من جميع أنواع الإعلانات
+    const adSelectors = [
+      '.ad-banner iframe',
+      '.ad-banner ins',
+      'div[id^="banner-"]',
+      'div[id^="sidebar-"]',
+      'div[id*="300x250"]',
+      'div[id*="728x90"]',
+      'div[id*="468x60"]',
+      'iframe[src*="ads"]',
+      'ins.adsbygoogle',
+      '.ad-modern-wrapper > div',
+      '.ad-content-scaler > *'
+    ];
+    
+    adSelectors.forEach(selector => {
+      try {
+        document.querySelectorAll(selector).forEach(ad => {
+          this.scaleAdElement(ad);
+        });
+      } catch (e) {
+        console.warn(`⚠️ خطأ في معالجة ${selector}:`, e);
+      }
+    });
+    
+    // التحقق من الإعلانات المحددة
+    this.checkAndFixSpecificAds();
+  }
+
+  startAdScalingSystem() {
+    console.log('📏 بدء نظام تحجيم الإعلانات...');
+    
+    const observer = new MutationObserver(() => {
+      setTimeout(() => this.scaleAllAds(), 100);
+    });
+    
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+    
+    setInterval(() => this.scaleAllAds(), 2000);
+    window.addEventListener('resize', () => this.scaleAllAds());
+  }
+
+  // === مراقبة تحميل الإعلانات بشكل ديناميكي ===
+  setupAdLoadObserver() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach(mutation => {
+        if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+          mutation.addedNodes.forEach(node => {
+            if (node.nodeType === 1) { // عنصر HTML
+              // التحقق من الإعلانات الجديدة
+              if (node.tagName === 'IFRAME' || 
+                  node.tagName === 'INS' || 
+                  node.id?.includes('banner') ||
+                  node.id?.includes('sidebar') ||
+                  node.className?.includes('ad')) {
+                
+                setTimeout(() => {
+                  this.scaleAdElement(node);
+                }, 300);
+              }
+              
+              // التحقق من عناصر داخل الإعلانات
+              if (node.querySelectorAll) {
+                const ads = node.querySelectorAll('iframe, ins, [id*="ad"], [class*="ad"]');
+                ads.forEach(ad => {
+                  setTimeout(() => {
+                    this.scaleAdElement(ad);
+                  }, 500);
+                });
+              }
+            }
+          });
+        }
+      });
+    });
+    
+    // مراقبة كل حاوية إعلان
+    const adContainers = document.querySelectorAll('.ad-banner, .ad-modern-wrapper, [id^="ad-"]');
+    adContainers.forEach(container => {
+      observer.observe(container, {
+        childList: true,
+        subtree: true
+      });
+    });
+  }
+
+  // === 1. تحميل الإعدادات ===
+  async init() {
+    try {
+      this.filterUnityErrors();
+      this.fixAdContainers();
+      
+      const response = await fetch('ads.json');
+      if (!response.ok) throw new Error('Failed to load ads.json');
+      
+      this.config = await response.json();
+      console.log('✅ تم تحميل إعدادات الإعلانات');
+      
+      // ✅ التحقق من تفعيل Anti-AdBlock
+      const antiAdblockEnabled = this.config.antiAdblock?.enabled ?? true;
+      
+      if (antiAdblockEnabled) {
+        console.log('🔍 Anti-AdBlock مُفعّل - بدء الفحص...');
+        const adBlockDetected = await this.detectAdBlockEffectively();
+        
+        if (adBlockDetected) {
+          console.log('🚫 AdBlock detected - Blocking page access');
+          this.blockPageAccess();
+          return;
+        }
+      } else {
+        console.log('⚠️ Anti-AdBlock معطّل - تخطي الفحص');
+      }
+      
+      // تحميل جميع الإعلانات
+      await this.loadAllAds();
+      console.log('🎯 تم تفعيل جميع الإعلانات بنجاح');
+      this.startAdScalingSystem();
+      this.setupAdLoadObserver();
+      
+    } catch (error) {
+      console.error('❌ خطأ في تحميل الإعلانات:', error);
+      this.showFallbackAds();
     }
-  });
-}
+  }
+
   // === 2. كشف AdBlock بشكل فعال ===
   async detectAdBlockEffectively() {
     console.log('🔍 بدء كشف AdBlock...');
@@ -1498,6 +1629,103 @@ document.addEventListener('DOMContentLoaded', () => {
     div[class*="ad"] {
       max-width: 100% !important;
       overflow: hidden !important;
+    }
+    
+    /* === إصلاح نهائي للإعلانات المربعة والواسعة === */
+    div[id*="300x250"] iframe,
+    div[id*="300x250"] ins,
+    div[style*="300px"] iframe,
+    div[style*="300px"] ins {
+      width: 300px !important;
+      height: 250px !important;
+      transform-origin: top left !important;
+      transform: scale(var(--ad-scale, 1)) !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      overflow: hidden !important;
+    }
+
+    div[id*="728x90"] iframe,
+    div[id*="728x90"] ins,
+    div[style*="728px"] iframe,
+    div[style*="728px"] ins {
+      width: 728px !important;
+      height: 90px !important;
+      transform-origin: top left !important;
+      transform: scale(var(--ad-scale, 1)) !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      overflow: hidden !important;
+    }
+
+    div[id*="468x60"] iframe,
+    div[id*="468x60"] ins,
+    div[style*="468px"] iframe,
+    div[style*="468px"] ins {
+      width: 468px !important;
+      height: 60px !important;
+      transform-origin: top left !important;
+      transform: scale(var(--ad-scale, 1)) !important;
+      max-width: 100% !important;
+      max-height: 100% !important;
+      overflow: hidden !important;
+    }
+
+    /* === إصلاح خاص للإعلانات داخل iframes === */
+    .ad-banner iframe,
+    .ad-modern-wrapper iframe {
+      display: block !important;
+      border: none !important;
+      background: transparent !important;
+    }
+
+    /* === منع القطع والتشويه === */
+    .ad-content-scaler {
+      position: relative !important;
+      overflow: visible !important;
+    }
+
+    .ad-content-scaler > * {
+      position: absolute !important;
+      top: 50% !important;
+      left: 50% !important;
+      transform: translate(-50%, -50%) scale(var(--ad-scale, 1)) !important;
+      transform-origin: center center !important;
+    }
+
+    /* === إصلاح للجوال === */
+    @media (max-width: 768px) {
+      div[id*="300x250"],
+      div[style*="300px"] {
+        --ad-scale: 0.85 !important;
+      }
+      
+      div[id*="728x90"],
+      div[style*="728px"] {
+        --ad-scale: 0.8 !important;
+      }
+      
+      div[id*="468x60"],
+      div[style*="468px"] {
+        --ad-scale: 0.9 !important;
+      }
+    }
+
+    @media (max-width: 480px) {
+      div[id*="300x250"],
+      div[style*="300px"] {
+        --ad-scale: 0.7 !important;
+      }
+      
+      div[id*="728x90"],
+      div[style*="728px"] {
+        --ad-scale: 0.65 !important;
+      }
+      
+      div[id*="468x60"],
+      div[style*="468px"] {
+        --ad-scale: 0.75 !important;
+      }
     }
   `;
   document.head.appendChild(style);
